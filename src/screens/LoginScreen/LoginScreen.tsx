@@ -1,7 +1,11 @@
-import { Center, Image, Text } from "native-base";
+import { Button, Center, Image, Text } from "native-base";
 import { SvgUri } from "react-native-svg";
 
-const LoginScreen = () => {
+type LoginScreenProps = {
+  navigation: any;
+};
+
+const LoginScreen = ({ navigation }: LoginScreenProps) => {
   return (
     <Center paddingY={8} paddingX={2.5}>
       <Image
@@ -25,6 +29,9 @@ const LoginScreen = () => {
           Become fluent faster through one on one video chat lessons tailored to
           your goals.
         </Text>
+      </Center>
+      <Center>
+        <Button onPress={() => navigation.push("Test")}>Log in 111</Button>
       </Center>
     </Center>
   );
