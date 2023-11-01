@@ -2,7 +2,7 @@ import { Button, Center, HStack, Text, VStack } from "native-base";
 import TutorItem from "../../components/TutorItem/TutorItem";
 import { NavigationState, useNavigation } from "@react-navigation/native";
 
-const TutorList = () => {
+const TutorListScreen = () => {
   const navigation = useNavigation();
 
   return (
@@ -29,4 +29,4 @@ const TutorList = () => {
   );
 };
 
-export default TutorList;
+export default TutorListScreen;

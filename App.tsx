@@ -5,11 +5,14 @@ import MainLayout from "./src/layouts/MainLayout/MainLayout";
 import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer } from "@react-navigation/native";
 import { useFonts } from "expo-font";
-import TutorList from "./src/screens/TutorList";
-import TutorDetail from "./src/screens/TutorDetail/TutorDetail";
 import ScheduleScreen from "./src/screens/ScheduleScreen";
 import HistoryScreen from "./src/screens/HistoryScreen";
 import CoursesScreen from "./src/screens/CoursesScreen";
+import TutorListScreen from "./src/screens/TutorListScreen";
+import TutorDetailScreen from "./src/screens/TutorDetailScreen";
+import CourseDetailScreen from "./src/screens/CourseDetailScreen";
+import TopicDetailScreen from "./src/screens/TopicDetailScreen";
+import DialScreen from "./src/screens/DialScreen";
 
 const Stack = createStackNavigator();
 
@@ -99,11 +102,14 @@ export default function App() {
           }
         >
           <Stack.Screen name="Login" component={LoginScreen} />
-          <Stack.Screen name="TutorList" component={TutorList} />
-          <Stack.Screen name="TutorDetail" component={TutorDetail} />
+          <Stack.Screen name="TutorList" component={TutorListScreen} />
+          <Stack.Screen name="TutorDetail" component={TutorDetailScreen} />
           <Stack.Screen name="Schedule" component={ScheduleScreen} />
           <Stack.Screen name="History" component={HistoryScreen} />
           <Stack.Screen name="Courses" component={CoursesScreen} />
+          <Stack.Screen name="CourseDetail" component={CourseDetailScreen} />
+          <Stack.Screen name="TopicDetail" component={TopicDetailScreen} />
+          <Stack.Screen name="Dial" component={DialScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     </NativeBaseProvider>

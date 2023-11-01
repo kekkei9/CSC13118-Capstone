@@ -1,6 +1,10 @@
 import { Text, VStack, HStack } from "native-base";
+import CourseItem from "../../components/CourseItem";
+import { useNavigation } from "@react-navigation/native";
 
 const CoursesScreen = () => {
+  const navigation = useNavigation();
+
   return (
     <VStack>
       <HStack>
@@ -18,6 +22,11 @@ const CoursesScreen = () => {
       <Text>3 kinds of input</Text>
       <Text>Tabs</Text>
       {/* type -> courses */}
+      {[...Array(5)].map((_) => (
+        <CourseItem
+          onClick={() => navigation.navigate("CourseDetail" as never)}
+        />
+      ))}
       {/* Courses List */}
     </VStack>
   );

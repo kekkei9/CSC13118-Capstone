@@ -1,6 +1,6 @@
 import { Text, VStack, HStack, Button } from "native-base";
 
-const TutorDetail = () => {
+const TutorDetailScreen = () => {
   return (
     <VStack>
       <HStack>
@@ -41,4 +41,4 @@ const TutorDetail = () => {
   );
 };
 
-export default TutorDetail;
+export default TutorDetailScreen;
