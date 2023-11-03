@@ -5,13 +5,7 @@ import TutorDetailScreen from "../../../screens/TutorDetailScreen";
 const Stack = createStackNavigator();
 
 const TutorsStack = () => (
-  <Stack.Navigator
-    screenOptions={
-      {
-        // headerShown: false,
-      }
-    }
-  >
+  <Stack.Navigator initialRouteName="Tutor List">
     <Stack.Screen name="Tutor List" component={TutorListScreen} />
     <Stack.Screen name="Tutor Detail" component={TutorDetailScreen} />
   </Stack.Navigator>

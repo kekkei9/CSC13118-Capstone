@@ -7,16 +7,14 @@ import {
   Container,
 } from "native-base";
 import LoginScreen from "./src/screens/LoginScreen";
-import { NavigationContainer, useRoute } from "@react-navigation/native";
+import { NavigationContainer } from "@react-navigation/native";
 import { useFonts } from "expo-font";
 import ScheduleScreen from "./src/screens/ScheduleScreen";
 import HistoryScreen from "./src/screens/HistoryScreen";
-import CoursesScreen from "./src/screens/CoursesScreen";
-import CourseDetailScreen from "./src/screens/CourseDetailScreen";
-import TopicDetailScreen from "./src/screens/TopicDetailScreen";
 import DialScreen from "./src/screens/DialScreen";
 import { createDrawerNavigator } from "@react-navigation/drawer";
-import TutorsStack from "./src/routes/Stacks/TutorsStack/TutorsStack";
+import CoursesStack from "./src/routes/Stacks/CoursesStack";
+import TutorsStack from "./src/routes/Stacks/TutorsStack";
 
 const Drawer = createDrawerNavigator();
 
@@ -98,16 +96,14 @@ export default function App() {
     <NativeBaseProvider theme={theme}>
       <NavigationContainer>
         <Drawer.Navigator
-          initialRouteName="History"
+          initialRouteName="Courses"
           screenOptions={{ sceneContainerStyle: { flex: 1 } }}
         >
           <Drawer.Screen name="Login" component={LoginScreen} />
           <Drawer.Screen name="Tutors" component={TutorsStack} />
           <Drawer.Screen name="Schedule" component={ScheduleScreen} />
           <Drawer.Screen name="History" component={HistoryScreen} />
-          <Drawer.Screen name="Courses" component={CoursesScreen} />
-          <Drawer.Screen name="CourseDetail" component={CourseDetailScreen} />
-          <Drawer.Screen name="TopicDetail" component={TopicDetailScreen} />
+          <Drawer.Screen name="Courses" component={CoursesStack} />
           <Drawer.Screen name="Dial" component={DialScreen} />
         </Drawer.Navigator>
       </NavigationContainer>

@@ -1,16 +1,23 @@
-import { Text, VStack, HStack } from "native-base";
+import { Text, VStack, HStack, ScrollView, Image } from "native-base";
 import CourseItem from "../../components/CourseItem";
 import { useNavigation } from "@react-navigation/native";
+import { SvgUri } from "react-native-svg";
 
 const CoursesScreen = () => {
   const navigation = useNavigation();
 
   return (
-    <VStack>
-      <HStack>
-        <Text>Image</Text>
+    <ScrollView px={10} py={9}>
+      <HStack space={6}>
+        <SvgUri
+          uri="https://sandbox.app.lettutor.com/static/media/course.0bf1bb71.svg"
+          width={100}
+          height={100}
+        />
         <VStack>
-          <Text>Discover Courses</Text>
+          <Text fontSize={24} fontWeight={600}>
+            Discover Courses
+          </Text>
           <Text>Input Search</Text>
         </VStack>
       </HStack>
@@ -28,7 +35,7 @@ const CoursesScreen = () => {
         />
       ))}
       {/* Courses List */}
-    </VStack>
+    </ScrollView>
   );
 };
 
