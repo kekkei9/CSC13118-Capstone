@@ -1,20 +1,24 @@
 import "react-native-gesture-handler";
-import { NativeBaseProvider, Text, extendTheme } from "native-base";
+import {
+  NativeBaseProvider,
+  Image,
+  extendTheme,
+  Text,
+  Container,
+} from "native-base";
 import LoginScreen from "./src/screens/LoginScreen";
-import MainLayout from "./src/layouts/MainLayout/MainLayout";
-import { createStackNavigator } from "@react-navigation/stack";
-import { NavigationContainer } from "@react-navigation/native";
+import { NavigationContainer, useRoute } from "@react-navigation/native";
 import { useFonts } from "expo-font";
 import ScheduleScreen from "./src/screens/ScheduleScreen";
 import HistoryScreen from "./src/screens/HistoryScreen";
 import CoursesScreen from "./src/screens/CoursesScreen";
-import TutorListScreen from "./src/screens/TutorListScreen";
-import TutorDetailScreen from "./src/screens/TutorDetailScreen";
 import CourseDetailScreen from "./src/screens/CourseDetailScreen";
 import TopicDetailScreen from "./src/screens/TopicDetailScreen";
 import DialScreen from "./src/screens/DialScreen";
+import { createDrawerNavigator } from "@react-navigation/drawer";
+import TutorsStack from "./src/routes/Stacks/TutorsStack/TutorsStack";
 
-const Stack = createStackNavigator();
+const Drawer = createDrawerNavigator();
 
 const theme = extendTheme({
   fontConfig: {
@@ -93,24 +97,19 @@ export default function App() {
   return (
     <NativeBaseProvider theme={theme}>
       <NavigationContainer>
-        <Stack.Navigator
-          initialRouteName="History"
-          screenOptions={
-            {
-              // cardStyle: { backgroundColor: "#fff" },
-            }
-          }
+        <Drawer.Navigator
+          initialRouteName="Tutors"
+          screenOptions={{ sceneContainerStyle: { flex: 1 } }}
         >
-          <Stack.Screen name="Login" component={LoginScreen} />
-          <Stack.Screen name="TutorList" component={TutorListScreen} />
-          <Stack.Screen name="TutorDetail" component={TutorDetailScreen} />
-          <Stack.Screen name="Schedule" component={ScheduleScreen} />
-          <Stack.Screen name="History" component={HistoryScreen} />
-          <Stack.Screen name="Courses" component={CoursesScreen} />
-          <Stack.Screen name="CourseDetail" component={CourseDetailScreen} />
-          <Stack.Screen name="TopicDetail" component={TopicDetailScreen} />
-          <Stack.Screen name="Dial" component={DialScreen} />
-        </Stack.Navigator>
+          <Drawer.Screen name="Login" component={LoginScreen} />
+          <Drawer.Screen name="Tutors" component={TutorsStack} />
+          <Drawer.Screen name="Schedule" component={ScheduleScreen} />
+          <Drawer.Screen name="History" component={HistoryScreen} />
+          <Drawer.Screen name="Courses" component={CoursesScreen} />
+          <Drawer.Screen name="CourseDetail" component={CourseDetailScreen} />
+          <Drawer.Screen name="TopicDetail" component={TopicDetailScreen} />
+          <Drawer.Screen name="Dial" component={DialScreen} />
+        </Drawer.Navigator>
       </NavigationContainer>
     </NativeBaseProvider>
   );

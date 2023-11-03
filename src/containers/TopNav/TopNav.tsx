@@ -1,5 +1,4 @@
-import { Text, Flex } from "native-base";
-import SvgUri from "react-native-svg-uri";
+import { Flex, Image } from "native-base";
 import ChooseLanguage from "../../components/ChooseLanguage/ChooseLanguage";
 
 const TopNav = () => {
@@ -17,13 +16,14 @@ const TopNav = () => {
         shadowColor: "rgba(0, 0, 0, 0.2)",
         shadowOffset: { height: 2, width: 2 },
       }}
+      shadow={"2"}
+      backgroundColor={"#fff"}
     >
-      <SvgUri
+      <Image
         width="170"
         height="39"
-        source={{
-          uri: "https://sandbox.app.lettutor.com/static/media/lettutor_logo.91f91ade.svg",
-        }}
+        src="/assets/letutor_LO"
+        alt="Lettutor Logo"
       />
       <ChooseLanguage />
     </Flex>
