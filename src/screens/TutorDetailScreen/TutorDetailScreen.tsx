@@ -7,7 +7,7 @@ import Tag from "../../components/Tag/Tag";
 
 const TutorDetailScreen = () => {
   return (
-    <ScrollView>
+    <ScrollView showsVerticalScrollIndicator={false}>
       <VStack px={6} py={9}>
         <HStack space={5}>
           <Image

@@ -7,9 +7,12 @@ import {
   faVideo,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { Text, VStack, HStack, Container } from "native-base";
+import { useNavigation } from "@react-navigation/native";
+import { Text, VStack, HStack, Container, Pressable } from "native-base";
 
 const DialScreen = () => {
+  const navigation = useNavigation();
+
   return (
     <VStack
       alignItems={"center"}
@@ -43,7 +46,7 @@ const DialScreen = () => {
       >
         {[faMicrophone, faVideo, faShareFromSquare, faHand, faEllipsis].map(
           (faIcon, index) => (
-            <Container
+            <Pressable
               w={12}
               h={12}
               alignItems={"center"}
@@ -51,19 +54,20 @@ const DialScreen = () => {
               key={index}
             >
               <FontAwesomeIcon icon={faIcon} color="white" />
-            </Container>
+            </Pressable>
           )
         )}
-        <Container
+        <Pressable
           w={12}
           h={12}
           backgroundColor={"#E70013"}
           alignItems={"center"}
           justifyContent={"center"}
           rounded={"md"}
+          onPress={() => navigation.navigate("History" as never)}
         >
           <FontAwesomeIcon icon={faPhone} color="white" />
-        </Container>
+        </Pressable>
       </HStack>
     </VStack>
   );

@@ -14,8 +14,8 @@ const TutorListScreen = () => {
   const navigation = useNavigation();
 
   return (
-    <ScrollView>
-      <VStack px={2.5}>
+    <ScrollView showsVerticalScrollIndicator={false}>
+      <VStack px={2.5} flex={1}>
         <Center
           backgroundColor={
             "linear-gradient(144deg, rgb(12, 61, 223) 0%, rgb(5, 23, 157) 100%);"

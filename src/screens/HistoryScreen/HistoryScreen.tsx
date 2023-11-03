@@ -5,7 +5,7 @@ import HistoryItem from "../../components/HistoryItem";
 
 const HistoryScreen = () => {
   return (
-    <ScrollView px={2.5} py={9}>
+    <ScrollView showsVerticalScrollIndicator={false} px={2.5} py={9}>
       <VStack px={7}>
         <SvgUri
           uri="https://sandbox.app.lettutor.com/static/media/history.1e097d10.svg"
@@ -30,7 +30,7 @@ const HistoryScreen = () => {
       </VStack>
       <VStack px={7} space={6} mt={6}>
         {[...Array(5)].map((_, index) => (
-          <HistoryItem />
+          <HistoryItem key={index} />
         ))}
       </VStack>
     </ScrollView>

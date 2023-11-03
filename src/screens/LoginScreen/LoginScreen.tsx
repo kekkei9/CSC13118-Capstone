@@ -18,7 +18,7 @@ const LoginScreen = () => {
   const navigation = useNavigation();
 
   return (
-    <ScrollView>
+    <ScrollView showsVerticalScrollIndicator={false}>
       <Center paddingY={9} paddingX={2.5} flex={1}>
         <Image
           src="https://sandbox.app.lettutor.com/static/media/login.8d01124a.png"

@@ -1,10 +1,13 @@
 import { faComment } from "@fortawesome/free-regular-svg-icons";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { useNavigation } from "@react-navigation/native";
 import { Text, VStack, HStack, Image, Button } from "native-base";
 import { SvgUri } from "react-native-svg";
 
 const BookedItem = () => {
+  const navigation = useNavigation();
+
   return (
     <VStack
       backgroundColor={"rgb(241, 241, 241)"}
@@ -70,7 +73,9 @@ const BookedItem = () => {
           </Text>
         </VStack>
       </VStack>
-      <Button mt={4}>Go to meeting</Button>
+      <Button mt={4} onPress={() => navigation.navigate("Dial" as never)}>
+        Go to meeting
+      </Button>
     </VStack>
   );
 };
