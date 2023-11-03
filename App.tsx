@@ -98,7 +98,7 @@ export default function App() {
     <NativeBaseProvider theme={theme}>
       <NavigationContainer>
         <Drawer.Navigator
-          initialRouteName="Tutors"
+          initialRouteName="History"
           screenOptions={{ sceneContainerStyle: { flex: 1 } }}
         >
           <Drawer.Screen name="Login" component={LoginScreen} />
