@@ -51,7 +51,12 @@ const CourseDetailScreen = () => {
             <Text fontSize={12} color={"rgb(128, 128, 128)"}>
               Let's discuss how technology is changing the way we live
             </Text>
-            <Button mt={4}>Discover</Button>
+            <Button
+              mt={4}
+              onPress={() => navigation.navigate("Topic Detail" as never)}
+            >
+              Discover
+            </Button>
           </VStack>
         </VStack>
         <Text fontSize={22} fontWeight={600} mt={8} ml={6}>
