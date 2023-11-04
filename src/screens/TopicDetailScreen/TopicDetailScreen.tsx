@@ -45,8 +45,9 @@ const TopicDetailScreen = () => {
               }
               onPress={() => setCurrentTopic(index)}
               rounded={"2xl"}
+              key={index}
             >
-              <Text key={index} fontSize={16} fontWeight={500}>
+              <Text fontSize={16} fontWeight={500}>
                 {index + 1}. {topic}
               </Text>
             </Pressable>

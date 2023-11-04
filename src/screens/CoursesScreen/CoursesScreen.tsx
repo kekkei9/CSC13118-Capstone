@@ -98,6 +98,7 @@ const CoursesScreen = () => {
               borderColor={borderColor}
               alignItems="center"
               p="3"
+              key={i}
             >
               <Pressable
                 onPress={() => {
@@ -121,70 +122,72 @@ const CoursesScreen = () => {
   };
 
   return (
-    <ScrollView showsVerticalScrollIndicator={false} px={10} py={9}>
-      <HStack space={6}>
-        <SvgUri
-          uri="https://sandbox.app.lettutor.com/static/media/course.0bf1bb71.svg"
-          width={100}
-          height={100}
-        />
-        <VStack flex={1}>
-          <Text fontSize={24} fontWeight={600}>
-            Discover
-          </Text>
-          <Text fontSize={24} fontWeight={600}>
-            Courses
-          </Text>
-          <Input placeholder="Course" w={"full"} />
-        </VStack>
-      </HStack>
-      <Text my={4}>
-        LiveTutor has built the most quality, methodical and scientific courses
-        in the fields of life for those who are in need of improving their
-        knowledge of the fields.
-      </Text>
-      <Flex
-        w={"full"}
-        wrap="wrap"
-        flexDirection={"row"}
-        justifyContent={"space-between"}
-      >
-        {["Select level", "Select category", "Sort by level"].map(
-          (placeholder, index) => (
-            <Select key={index} w={150} mb={2} placeholder={placeholder} />
-          )
-        )}
-      </Flex>
-      <Flex flex={1} flexDirection={"row"}>
-        <TabView
-          navigationState={{
-            index,
-            routes,
-          }}
-          renderScene={renderScene}
-          renderTabBar={renderTabBar}
-          onIndexChange={setIndex}
-          initialLayout={initialLayout}
-          style={{
-            marginTop: StatusBar.currentHeight,
-          }}
-        />
-      </Flex>
-      <VStack pt={8} space={16}>
-        {/* Categories -> Courses */}
-        {[...Array(3)].map((_, index) => (
-          <VStack justifyContent={"center"} key={index} space={8}>
-            <Text fontSize={28} fontWeight={500}>
-              English For Traveling
+    <ScrollView showsVerticalScrollIndicator={false}>
+      <VStack px={10} py={9} flex={1}>
+        <HStack space={6}>
+          <SvgUri
+            uri="https://sandbox.app.lettutor.com/static/media/course.0bf1bb71.svg"
+            width={100}
+            height={100}
+          />
+          <VStack flex={1}>
+            <Text fontSize={24} fontWeight={600}>
+              Discover
             </Text>
-            {[...Array(5)].map((_, index) => (
-              <CourseItem
-                onClick={() => navigation.navigate("Course Detail" as never)}
-                key={index}
-              />
-            ))}
+            <Text fontSize={24} fontWeight={600}>
+              Courses
+            </Text>
+            <Input placeholder="Course" w={"full"} />
           </VStack>
-        ))}
+        </HStack>
+        <Text my={4}>
+          LiveTutor has built the most quality, methodical and scientific
+          courses in the fields of life for those who are in need of improving
+          their knowledge of the fields.
+        </Text>
+        <Flex
+          w={"full"}
+          wrap="wrap"
+          flexDirection={"row"}
+          justifyContent={"space-between"}
+        >
+          {["Select level", "Select category", "Sort by level"].map(
+            (placeholder, index) => (
+              <Select key={index} w={150} mb={2} placeholder={placeholder} />
+            )
+          )}
+        </Flex>
+        <Flex flex={1} flexDirection={"row"}>
+          <TabView
+            navigationState={{
+              index,
+              routes,
+            }}
+            renderScene={renderScene}
+            renderTabBar={renderTabBar}
+            onIndexChange={setIndex}
+            initialLayout={initialLayout}
+            style={{
+              marginTop: StatusBar.currentHeight,
+            }}
+          />
+        </Flex>
+        <VStack pt={8} space={16}>
+          {/* Categories -> Courses */}
+          {[...Array(3)].map((_, index) => (
+            <VStack justifyContent={"center"} key={index} space={8}>
+              <Text fontSize={28} fontWeight={500}>
+                English For Traveling
+              </Text>
+              {[...Array(5)].map((_, index) => (
+                <CourseItem
+                  onClick={() => navigation.navigate("Course Detail" as never)}
+                  key={index}
+                />
+              ))}
+            </VStack>
+          ))}
+        </VStack>
       </VStack>
     </ScrollView>
   );

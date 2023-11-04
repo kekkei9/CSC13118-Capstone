@@ -111,8 +111,9 @@ const CourseDetailScreen = () => {
               borderWidth={2}
               onPress={() => navigation.navigate("Topic Detail" as never)}
               rounded={"sm"}
+              key={index}
             >
-              <Text key={index} fontSize={16} fontWeight={500}>
+              <Text fontSize={16} fontWeight={500}>
                 {index + 1}. {topic}
               </Text>
             </Pressable>

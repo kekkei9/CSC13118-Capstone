@@ -33,7 +33,12 @@ const TutorListScreen = () => {
               </Text>
               <Text color={"#ffff00"}>(starts in 16:06:41)</Text>
             </Container>
-            <Button fontSize={16} flex={1} flexShrink={0}>
+            <Button
+              fontSize={16}
+              flex={1}
+              flexShrink={0}
+              onPress={() => navigation.navigate("Dial" as never)}
+            >
               Enter lesson room
             </Button>
           </HStack>
