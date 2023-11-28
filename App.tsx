@@ -15,6 +15,9 @@ import DialScreen from "./src/screens/DialScreen";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import CoursesStack from "./src/routes/Stacks/CoursesStack";
 import TutorsStack from "./src/routes/Stacks/TutorsStack";
+import SignUpScreen from "./src/screens/SignUpScreen";
+import { Provider } from "react-redux";
+import store from "./src/redux/store";
 
 const Drawer = createDrawerNavigator();
 
@@ -93,20 +96,23 @@ export default function App() {
   }
 
   return (
-    <NativeBaseProvider theme={theme}>
-      <NavigationContainer>
-        <Drawer.Navigator
-          initialRouteName="Courses"
-          screenOptions={{ sceneContainerStyle: { flex: 1 } }}
-        >
-          <Drawer.Screen name="Login" component={LoginScreen} />
-          <Drawer.Screen name="Tutors" component={TutorsStack} />
-          <Drawer.Screen name="Schedule" component={ScheduleScreen} />
-          <Drawer.Screen name="History" component={HistoryScreen} />
-          <Drawer.Screen name="Courses" component={CoursesStack} />
-          <Drawer.Screen name="Dial" component={DialScreen} />
-        </Drawer.Navigator>
-      </NavigationContainer>
-    </NativeBaseProvider>
+    <Provider store={store}>
+      <NativeBaseProvider theme={theme}>
+        <NavigationContainer>
+          <Drawer.Navigator
+            initialRouteName="SignUp"
+            screenOptions={{ sceneContainerStyle: { flex: 1 } }}
+          >
+            <Drawer.Screen name="Login" component={LoginScreen} />
+            <Drawer.Screen name="SignUp" component={SignUpScreen} />
+            <Drawer.Screen name="Tutors" component={TutorsStack} />
+            <Drawer.Screen name="Schedule" component={ScheduleScreen} />
+            <Drawer.Screen name="History" component={HistoryScreen} />
+            <Drawer.Screen name="Courses" component={CoursesStack} />
+            <Drawer.Screen name="Dial" component={DialScreen} />
+          </Drawer.Navigator>
+        </NavigationContainer>
+      </NativeBaseProvider>
+    </Provider>
   );
 }

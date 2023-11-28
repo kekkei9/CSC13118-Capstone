@@ -13,8 +13,9 @@ import {
 } from "native-base";
 
 import { SvgUri } from "react-native-svg";
+import { signUpByUsernamePassword } from "../../services/backend/AuthController";
 
-const LoginScreen = () => {
+const SignUpScreen = () => {
   const navigation = useNavigation();
 
   return (
@@ -35,7 +36,7 @@ const LoginScreen = () => {
             color={"rgb(0, 113, 240)"}
             fontWeight={600}
           >
-            Say hello to your English tutors
+            Start learning with LetTutor
           </Text>
           <Text
             textAlign={"center"}
@@ -57,16 +58,17 @@ const LoginScreen = () => {
               <Text color="#A4B0BE">PASSWORD</Text>
               <Input type="password" />
             </Flex>
-            <Text mb={2.5} color="#286AD2">
-              Forgot password?
-            </Text>
             <Button
               mb={6}
-              onPress={() => navigation.navigate("Tutors" as never)}
+              onPress={() => {
+                //TODO: Replace w form data
+                signUpByUsernamePassword("username", "password");
+                navigation.navigate("Login" as never);
+              }}
               py={2.5}
             >
               <Text fontSize={20} color="white" fontWeight={500}>
-                LOG IN
+                SIGN UP
               </Text>
             </Button>
             <Center>
@@ -106,12 +108,12 @@ const LoginScreen = () => {
                 </Container>
               </HStack>
               <HStack mt={6}>
-                <Text>Not a member yet? </Text>
+                <Text>Already have an account? </Text>
                 <Text
                   color={"#1890ff"}
-                  onPress={() => navigation.navigate("SignUp" as never)}
+                  onPress={() => navigation.navigate("Login" as never)}
                 >
-                  Sign up
+                  Log in
                 </Text>
               </HStack>
             </Center>
@@ -122,4 +124,4 @@ const LoginScreen = () => {
   );
 };
 
-export default LoginScreen;
+export default SignUpScreen;
