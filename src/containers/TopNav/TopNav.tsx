@@ -1,7 +1,11 @@
-import { Flex, Image } from "native-base";
+import { Flex } from "native-base";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { SvgUri } from "react-native-svg";
 import ChooseLanguage from "../../components/ChooseLanguage/ChooseLanguage";
 
 const TopNav = () => {
+  const insets = useSafeAreaInsets();
+
   return (
     <Flex
       justifyContent={"space-between"}
@@ -10,7 +14,7 @@ const TopNav = () => {
       width={"full"}
       maxWidth={"full"}
       paddingX={18}
-      height={70}
+      paddingY={13}
       position={"fixed"}
       style={{
         shadowColor: "rgba(0, 0, 0, 0.2)",
@@ -18,14 +22,15 @@ const TopNav = () => {
       }}
       shadow={"2"}
       backgroundColor={"#fff"}
+      paddingTop={insets.top + 13}
     >
-      <Image
+      <SvgUri
         width="170"
         height="39"
-        src="/assets/letutor_LO"
-        alt="Lettutor Logo"
+        uri="https://sandbox.app.lettutor.com/static/media/lettutor_logo.91f91ade.svg"
       />
       <ChooseLanguage />
+      <></>
     </Flex>
   );
 };

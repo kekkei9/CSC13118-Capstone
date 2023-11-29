@@ -1,6 +1,7 @@
-import { Button, Container, Flex, Text, Image } from "native-base";
-import { supportedLanguages } from "./languages";
+import { Button, Container, Flex, Text } from "native-base";
 import { useState } from "react";
+import { SvgUri } from "react-native-svg";
+import { supportedLanguages } from "./languages";
 
 const ChooseLanguage = () => {
   //TODO: move this to redux later
@@ -21,15 +22,14 @@ const ChooseLanguage = () => {
         height={38}
         onPress={() => setShowLanguagePopup((prev) => !prev)}
       >
-        <Image
-          src={
+        <SvgUri
+          uri={
             supportedLanguages.find(
               (language) => language.locale === currentLanguage
             )?.icon || ""
           }
           width={18}
           height={18}
-          alt="Language Icon"
         />
       </Button>
       {showLanguagePopup && (
@@ -50,7 +50,7 @@ const ChooseLanguage = () => {
               key={locale}
               backgroundColor={"#fff"}
             >
-              <Image src={icon} width={22} height={22} alt="Language Icon" />
+              <SvgUri uri={icon} width={22} height={22} />
               <Text marginLeft={2}>{name}</Text>
             </Flex>
           ))}

@@ -1,23 +1,13 @@
-import "react-native-gesture-handler";
-import {
-  NativeBaseProvider,
-  Image,
-  extendTheme,
-  Text,
-  Container,
-} from "native-base";
-import LoginScreen from "./src/screens/LoginScreen";
+import { createDrawerNavigator } from "@react-navigation/drawer";
 import { NavigationContainer } from "@react-navigation/native";
 import { useFonts } from "expo-font";
-import ScheduleScreen from "./src/screens/ScheduleScreen";
-import HistoryScreen from "./src/screens/HistoryScreen";
-import DialScreen from "./src/screens/DialScreen";
-import { createDrawerNavigator } from "@react-navigation/drawer";
-import CoursesStack from "./src/routes/Stacks/CoursesStack";
-import TutorsStack from "./src/routes/Stacks/TutorsStack";
-import SignUpScreen from "./src/screens/SignUpScreen";
+import { NativeBaseProvider, extendTheme } from "native-base";
+import "react-native-gesture-handler";
 import { Provider } from "react-redux";
+import AuthProvider from "./src/containers/AuthProvider";
 import store from "./src/redux/store";
+import StudentDrawer from "./src/routes/Drawers/StudentDrawer/StudentDrawer";
+import AuthStack from "./src/routes/Stacks/AuthStack";
 
 const Drawer = createDrawerNavigator();
 
@@ -99,18 +89,10 @@ export default function App() {
     <Provider store={store}>
       <NativeBaseProvider theme={theme}>
         <NavigationContainer>
-          <Drawer.Navigator
-            initialRouteName="SignUp"
-            screenOptions={{ sceneContainerStyle: { flex: 1 } }}
-          >
-            <Drawer.Screen name="Login" component={LoginScreen} />
-            <Drawer.Screen name="SignUp" component={SignUpScreen} />
-            <Drawer.Screen name="Tutors" component={TutorsStack} />
-            <Drawer.Screen name="Schedule" component={ScheduleScreen} />
-            <Drawer.Screen name="History" component={HistoryScreen} />
-            <Drawer.Screen name="Courses" component={CoursesStack} />
-            <Drawer.Screen name="Dial" component={DialScreen} />
-          </Drawer.Navigator>
+          <AuthProvider
+            authComponent={StudentDrawer}
+            unAuthComponent={AuthStack}
+          />
         </NavigationContainer>
       </NativeBaseProvider>
     </Provider>

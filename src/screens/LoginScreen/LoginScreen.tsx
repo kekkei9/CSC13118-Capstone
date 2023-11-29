@@ -11,11 +11,29 @@ import {
   Text,
   VStack,
 } from "native-base";
-
 import { SvgUri } from "react-native-svg";
+import { useAppDispatch } from "../../redux/store";
+import { loginByEmailPassword } from "../../redux/authentication/authentication.slice";
+import { Controller, useForm } from "react-hook-form";
+
+type FormValues = {
+  email: string;
+  password: string;
+};
 
 const LoginScreen = () => {
+  const {
+    handleSubmit,
+    control,
+    formState: { errors },
+  } = useForm<FormValues>();
+
+  const dispatch = useAppDispatch();
   const navigation = useNavigation();
+
+  const onSubmit = (values: FormValues) => {
+    dispatch(loginByEmailPassword(values));
+  };
 
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
@@ -51,20 +69,43 @@ const LoginScreen = () => {
               <Text color="#A4B0BE" mb={2}>
                 EMAIL
               </Text>
-              <Input placeholder="mail@example.com" w={"full"} />
+              <Controller
+                control={control}
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <Input
+                    onBlur={onBlur}
+                    placeholder="mail@example.com"
+                    onChangeText={(val) => onChange(val)}
+                    value={value}
+                    w={"full"}
+                    isInvalid={"email" in errors}
+                  />
+                )}
+                name="email"
+                rules={{ required: "Email is required", minLength: 6 }}
+              />
             </Flex>
             <Flex mb={"6"}>
               <Text color="#A4B0BE">PASSWORD</Text>
-              <Input type="password" />
+              <Controller
+                control={control}
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <Input
+                    onBlur={onBlur}
+                    type="password"
+                    onChangeText={(val) => onChange(val)}
+                    value={value}
+                    isInvalid={"password" in errors}
+                  />
+                )}
+                name="password"
+                rules={{ required: "Password is required", minLength: 6 }}
+              />
             </Flex>
             <Text mb={2.5} color="#286AD2">
               Forgot password?
             </Text>
-            <Button
-              mb={6}
-              onPress={() => navigation.navigate("Tutors" as never)}
-              py={2.5}
-            >
+            <Button mb={6} onPress={handleSubmit(onSubmit)} py={2.5}>
               <Text fontSize={20} color="white" fontWeight={500}>
                 LOG IN
               </Text>
