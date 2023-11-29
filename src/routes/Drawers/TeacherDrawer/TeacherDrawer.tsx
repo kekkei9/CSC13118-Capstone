@@ -8,7 +8,7 @@ import CustomDrawerContent from "../CustomDrawerContent";
 
 const Drawer = createDrawerNavigator();
 
-const StudentDrawer = () => {
+const TeacherDrawer = () => {
   return (
     <Drawer.Navigator
       initialRouteName="Tutors"
@@ -19,12 +19,10 @@ const StudentDrawer = () => {
       }}
       drawerContent={(props) => <CustomDrawerContent {...props} />}
     >
-      <Drawer.Screen name="Tutors" component={TutorsStack} />
       <Drawer.Screen name="Schedule" component={ScheduleScreen} />
-      <Drawer.Screen name="History" component={HistoryScreen} />
       <Drawer.Screen name="Courses" component={CoursesStack} />
     </Drawer.Navigator>
   );
 };
 
-export default StudentDrawer;
+export default TeacherDrawer;

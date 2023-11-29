@@ -6,7 +6,8 @@ type AuthenticationProps = {
 };
 
 const initialState: AuthenticationProps = {
-  isAuth: false,
+  //TODO: change to false
+  isAuth: true,
 };
 
 const profileSlice = createSlice({
@@ -32,9 +33,15 @@ const profileSlice = createSlice({
         isAuth: false,
       };
     },
+    setRole: (state, action) => {
+      return {
+        ...state,
+        role: action.payload,
+      };
+    },
   },
 });
 
-export const { loginByEmailPassword, logOut } = profileSlice.actions;
+export const { loginByEmailPassword, logOut, setRole } = profileSlice.actions;
 
 export default profileSlice.reducer;

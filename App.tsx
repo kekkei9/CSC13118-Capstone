@@ -8,8 +8,7 @@ import AuthProvider from "./src/containers/AuthProvider";
 import store from "./src/redux/store";
 import StudentDrawer from "./src/routes/Drawers/StudentDrawer/StudentDrawer";
 import AuthStack from "./src/routes/Stacks/AuthStack";
-
-const Drawer = createDrawerNavigator();
+import UserStack from "./src/routes/Stacks/UserStack";
 
 const theme = extendTheme({
   fontConfig: {
@@ -89,10 +88,7 @@ export default function App() {
     <Provider store={store}>
       <NativeBaseProvider theme={theme}>
         <NavigationContainer>
-          <AuthProvider
-            authComponent={StudentDrawer}
-            unAuthComponent={AuthStack}
-          />
+          <AuthProvider authComponent={UserStack} unAuthComponent={AuthStack} />
         </NavigationContainer>
       </NativeBaseProvider>
     </Provider>

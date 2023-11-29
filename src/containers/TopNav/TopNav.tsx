@@ -1,10 +1,16 @@
-import { Flex } from "native-base";
+import { useNavigation } from "@react-navigation/native";
+import { Flex, HStack, Pressable } from "native-base";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { SvgUri } from "react-native-svg";
 import ChooseLanguage from "../../components/ChooseLanguage/ChooseLanguage";
+import { useAppSelector } from "../../redux/store";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { faBars } from "@fortawesome/free-solid-svg-icons";
 
 const TopNav = () => {
+  const navigation = useNavigation<any>();
   const insets = useSafeAreaInsets();
+  const isAuth = useAppSelector((state) => state.authentication.isAuth);
 
   return (
     <Flex
@@ -29,8 +35,23 @@ const TopNav = () => {
         height="39"
         uri="https://sandbox.app.lettutor.com/static/media/lettutor_logo.91f91ade.svg"
       />
-      <ChooseLanguage />
-      <></>
+      <HStack space={2}>
+        <ChooseLanguage />
+        {isAuth && (
+          <Pressable
+            backgroundColor={"rgb(228, 230, 235)"}
+            rounded={"full"}
+            width={38}
+            height={38}
+            onPress={() => navigation.openDrawer()}
+            display={"flex"}
+            alignItems={"center"}
+            justifyContent={"center"}
+          >
+            <FontAwesomeIcon icon={faBars} size={18} color="#1A1A1A" />
+          </Pressable>
+        )}
+      </HStack>
     </Flex>
   );
 };
