@@ -8,6 +8,7 @@ type AuthenticationProps = {
 const initialState: AuthenticationProps = {
   //TODO: change to false
   isAuth: true,
+  role: "student",
 };
 
 const profileSlice = createSlice({

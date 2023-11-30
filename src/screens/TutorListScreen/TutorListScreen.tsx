@@ -10,6 +10,8 @@ import {
 import TutorItem from "../../components/TutorItem/TutorItem";
 import { useNavigation } from "@react-navigation/native";
 
+const PAGE_SIZE = 12;
+
 const TutorListScreen = () => {
   const navigation = useNavigation();
 
@@ -54,7 +56,7 @@ const TutorListScreen = () => {
           <Text fontSize={20} fontWeight={600} my={1.5}>
             Recommended Tutors
           </Text>
-          {[...Array(5)].map((_, index) => (
+          {[...Array(PAGE_SIZE)].map((_, index) => (
             <TutorItem
               onPress={() => navigation.navigate("Tutor Detail" as never)}
               key={index}

@@ -11,7 +11,7 @@ import {
 import { SvgUri } from "react-native-svg";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
-import { faHeart } from "@fortawesome/free-regular-svg-icons";
+import { faCalendarDays, faHeart } from "@fortawesome/free-regular-svg-icons";
 import Tag from "../Tag/Tag";
 
 type TutorItemProps = {
@@ -78,9 +78,22 @@ const TutorItem = ({ onPress }: TutorItemProps) => {
         know each student has something to bring on. Molding them to become an
         individual is a great success.
       </Text>
-      <Button alignSelf={"end"} mt={8} onPress={onPress}>
-        Book
-      </Button>
+      <HStack w={"full"} display={"flex"} justifyContent={"flex-end"}>
+        <Button
+          mt={8}
+          onPress={onPress}
+          leftIcon={
+            <FontAwesomeIcon icon={faCalendarDays} color="#1890ff" size={14} />
+          }
+          variant={"outline"}
+          rounded={"full"}
+          borderColor={"#1890ff"}
+          alignItems={"center"}
+          justifyContent={"center"}
+        >
+          <Text color={"#1890ff"}>Book</Text>
+        </Button>
+      </HStack>
     </VStack>
   );
 };

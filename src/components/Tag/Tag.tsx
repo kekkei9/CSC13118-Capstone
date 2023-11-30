@@ -9,13 +9,12 @@ const Tag = ({ content }: TagProps) => {
     <Container
       mr={2}
       mb={2}
-      color={"rgb(0, 113, 240)"}
       backgroundColor={"rgb(221, 234, 255)"}
       py={1.5}
       px={3}
       rounded={"full"}
     >
-      <Text>{content}</Text>
+      <Text color={"rgb(0, 113, 240)"}>{content}</Text>
     </Container>
   );
 };

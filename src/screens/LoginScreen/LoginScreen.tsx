@@ -7,6 +7,7 @@ import {
   HStack,
   Image,
   Input,
+  Pressable,
   ScrollView,
   Text,
   VStack,
@@ -102,9 +103,13 @@ const LoginScreen = () => {
                 rules={{ required: "Password is required", minLength: 6 }}
               />
             </Flex>
-            <Text mb={2.5} color="#286AD2">
-              Forgot password?
-            </Text>
+            <Pressable
+              onPress={() => navigation.navigate("ForgotPassword" as never)}
+            >
+              <Text mb={2.5} color="#286AD2">
+                Forgot password?
+              </Text>
+            </Pressable>
             <Button mb={6} onPress={handleSubmit(onSubmit)} py={2.5}>
               <Text fontSize={20} color="white" fontWeight={500}>
                 LOG IN
