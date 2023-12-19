@@ -1,3 +1,4 @@
+import { LogInResponse } from "../../../types/Response";
 import { axiosClient } from "../axiosClient";
 
 // ---------------------------SIGN UP---------------------------
@@ -11,7 +12,7 @@ export const signUpByPhonePassword = (phone: string, password: string) =>
 // ---------------------------LOG IN---------------------------
 
 export const logInByEmailPassword = (email: string, password: string) =>
-  axiosClient.post("/auth/login", { email, password });
+  axiosClient.post<LogInResponse>("/auth/login", { email, password });
 
 export const logInByPhonePassword = (phone: string, password: string) =>
   axiosClient.post("/auth/phone-login", { phone, password });

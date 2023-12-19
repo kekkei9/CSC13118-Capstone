@@ -1,48 +1,49 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { User } from "../../types/Auth";
+import { loginWithEmailPassword } from "./authentication.action";
 
-type AuthenticationProps = {
-  isAuth: boolean;
-  role?: "teacher" | "student";
+export type AuthenticationState = {
+  data: {
+    user: User | null;
+  };
+  status: {
+    error: any;
+    code?: string;
+  };
 };
 
-const initialState: AuthenticationProps = {
-  //TODO: change to false
-  isAuth: true,
-  role: "student",
+const initialState: AuthenticationState = {
+  data: {
+    user: null,
+  },
+  status: {
+    error: null,
+  },
 };
 
 const profileSlice = createSlice({
   name: "authentication",
   initialState,
-  reducers: {
-    loginByEmailPassword: (state, action) => {
-      const { email, password } = action.payload;
+  reducers: {},
+  extraReducers: (builder) => {
+    builder.addCase(loginWithEmailPassword.fulfilled, (state, action) => {
+      state.data.user = action.payload;
+      state.status.error = null;
+      state.status.code = undefined;
+    });
 
-      if (email === "teacher@lettutor.com" && password === "123456")
-        return {
-          isAuth: true,
-          role: "teacher",
-        };
-      if (email === "student@lettutor.com" && password === "123456")
-        return {
-          isAuth: true,
-          role: "student",
-        };
-    },
-    logOut: () => {
-      return {
-        isAuth: false,
-      };
-    },
-    setRole: (state, action) => {
-      return {
-        ...state,
-        role: action.payload,
-      };
-    },
+    builder.addCase(loginWithEmailPassword.rejected, (state, action) => {
+      state.data.user = null;
+      state.status.error = action.error;
+      state.status.code = undefined;
+    });
+
+    builder.addCase(loginWithEmailPassword.pending, (state) => {
+      state.data.user = null;
+      state.status.error = null;
+      state.status.code = undefined;
+    });
   },
 });
-
-export const { loginByEmailPassword, logOut, setRole } = profileSlice.actions;
 
 export default profileSlice.reducer;

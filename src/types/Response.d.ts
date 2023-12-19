@@ -13,3 +13,17 @@ export type PaginationResponse<T> = {
   };
   isSuccess: boolean;
 };
+
+export type LogInResponse = {
+  user: User;
+  tokens: {
+    access: {
+      token: string;
+      expires: string;
+    };
+    refresh: {
+      token: string;
+      expires: string;
+    };
+  };
+};
