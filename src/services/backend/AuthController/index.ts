@@ -34,11 +34,6 @@ export const activatePhoneWithOTP = (phone: string, otp: string) =>
 export const resendPhoneOTP = (phone: string) =>
   axiosClient.post("/verify/phone-auth-verify/create", { phone });
 
-// ---------------------------REFRESH TOKEN---------------------------
-
-export const refreshToken = (refreshToken: string, timezone: number) =>
-  axiosClient.post("/auth/refresh-token", { refreshToken, timezone });
-
 // ---------------------------FORGOT PASSWORD---------------------------
 
 export const sendForgotPasswordEmail = (email: string) =>

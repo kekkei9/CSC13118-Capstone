@@ -1,6 +1,18 @@
-import { HStack, View, Text, Input, Button, VStack } from "native-base";
+import { useNavigation } from "@react-navigation/native";
+import { Button, Input, Text, VStack, View } from "native-base";
+import { useState } from "react";
+import { sendForgotPasswordEmail } from "../../services/backend/AuthController";
 
 const ForgotPasswordScreen = () => {
+  const [email, setEmail] = useState("");
+
+  const handleClickSendResetLink = async () => {
+    const navigation = useNavigation();
+
+    await sendForgotPasswordEmail(email);
+    navigation.navigate("Login" as never);
+  };
+
   return (
     <View
       flex={1}
@@ -19,9 +31,11 @@ const ForgotPasswordScreen = () => {
         </Text>
         <VStack space={2} w={"full"}>
           <Text>Email</Text>
-          <Input w={"full"} />
+          <Input w={"full"} value={email} onChangeText={setEmail} />
         </VStack>
-        <Button mt={8}>Send reset link</Button>
+        <Button mt={8} onPress={handleClickSendResetLink}>
+          Send reset link
+        </Button>
       </VStack>
     </View>
   );

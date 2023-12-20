@@ -4,6 +4,7 @@ import {
   DrawerItemList,
 } from "@react-navigation/drawer";
 import { useAppDispatch } from "../../redux/store";
+import { logOut } from "../../redux/authentication/authentication.slice";
 
 const CustomDrawerContent = (props: any) => {
   const dispatch = useAppDispatch();
@@ -14,7 +15,7 @@ const CustomDrawerContent = (props: any) => {
     <DrawerContentScrollView {...props}>
       <DrawerItemList {...props} />
       <DrawerItem label={`Switch to ${oppositeRole}`} onPress={() => {}} />
-      <DrawerItem label="Log out" onPress={() => {}} />
+      <DrawerItem label="Log out" onPress={() => dispatch(logOut())} />
     </DrawerContentScrollView>
   );
 };

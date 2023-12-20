@@ -1,7 +1,7 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
 import { ACCESS_TOKEN, REFRESH_TOKEN } from "../../constants/AuthConstant";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Response } from "../../types/Response";
+import { LogInResponse, Response } from "../../types/Response";
 
 export interface RequestOptions {
   redirectOn401?: boolean;
@@ -32,16 +32,19 @@ export const axiosClient: CustomAxiosInstance = axios.create({
 });
 
 export const refreshAccessToken = async () => {
-  const { data: refreshResult } = await axiosClient.post<
-    Response<Omit<LoginData, "refreshToken">>
-  >("/dev/auth/refresh_token", {
-    refreshToken: await AsyncStorage.getItem(REFRESH_TOKEN),
-  });
-  await AsyncStorage.setItem(
-    ACCESS_TOKEN,
-    refreshResult?.data?.accessToken || ""
+  const currentRefreshToken = await AsyncStorage.getItem(REFRESH_TOKEN);
+  if (!currentRefreshToken) throw new Error("Refresh token not found");
+  const { data: response } = await axiosClient.post<LogInResponse>(
+    "/auth/refresh-token",
+    {
+      refreshToken: currentRefreshToken,
+      timezone: 7,
+    }
   );
-  return refreshResult?.data?.accessToken;
+
+  const refreshResult = response.tokens.access.token;
+  await AsyncStorage.setItem(ACCESS_TOKEN, refreshResult);
+  return refreshResult;
 };
 
 axiosClient.interceptors.request.use(async (config) => {

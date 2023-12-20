@@ -1,6 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { User } from "../../types/Auth";
 import { loginWithEmailPassword } from "./authentication.action";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { ACCESS_TOKEN, REFRESH_TOKEN } from "../../constants/AuthConstant";
 
 export type AuthenticationState = {
   data: User | null;
@@ -20,7 +22,14 @@ const initialState: AuthenticationState = {
 const profileSlice = createSlice({
   name: "authentication",
   initialState,
-  reducers: {},
+  reducers: {
+    logOut: (state) => {
+      // since we do not have any endpoint of logOut user, we just have to clear data * tokens
+      AsyncStorage.removeItem(ACCESS_TOKEN);
+      AsyncStorage.removeItem(REFRESH_TOKEN);
+      state.data = null;
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(loginWithEmailPassword.fulfilled, (state, action) => {
       state.data = action.payload;
@@ -41,5 +50,7 @@ const profileSlice = createSlice({
     });
   },
 });
+
+export const { logOut } = profileSlice.actions;
 
 export default profileSlice.reducer;

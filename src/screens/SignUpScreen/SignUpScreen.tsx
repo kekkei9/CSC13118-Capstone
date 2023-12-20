@@ -11,9 +11,9 @@ import {
   Text,
   VStack,
 } from "native-base";
-import { SvgUri } from "react-native-svg";
 import { Controller, useForm } from "react-hook-form";
-import { useAppDispatch } from "../../redux/store";
+import { SvgUri } from "react-native-svg";
+import { signUpByEmailPassword } from "../../services/backend/AuthController";
 
 type FormValues = {
   email: string;
@@ -27,21 +27,13 @@ const SignUpScreen = () => {
     handleSubmit,
   } = useForm<FormValues>();
 
-  const dispatch = useAppDispatch();
   const navigation = useNavigation();
 
-  const onSubmit = (values: FormValues) => {
+  const onSubmit = async (values: FormValues) => {
     const { email, password } = values;
 
-    // signUpByEmailPassword(email, password);
-    // // TODO: register, then redirect to sign in screen
-    // // default as teacher
-    // dispatch(
-    //   loginByEmailPassword({
-    //     email: "teacher@lettutor.com",
-    //     password: "123456",
-    //   })
-    // );
+    await signUpByEmailPassword(email, password);
+    navigation.navigate("Login" as never);
   };
 
   return (
