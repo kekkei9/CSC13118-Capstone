@@ -32,7 +32,7 @@ const ChooseLanguage = () => {
           height={18}
         />
       </Button>
-      {showLanguagePopup && (
+      {showLanguagePopup ? (
         <Flex
           position={"absolute"}
           top={38}
@@ -55,7 +55,7 @@ const ChooseLanguage = () => {
             </Flex>
           ))}
         </Flex>
-      )}
+      ) : null}
     </Container>
   );
 };

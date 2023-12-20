@@ -10,7 +10,7 @@ export default function AuthProvider({
   authComponent: AuthComponent,
   unAuthComponent: UnAuthComponent,
 }: AuthProviderProps) {
-  const { isAuth } = useAppSelector((state) => state.authentication);
+  const user = useAppSelector((state) => state.authentication.data);
 
-  return <>{isAuth ? <AuthComponent /> : <UnAuthComponent />}</>;
+  return <>{!!user ? <AuthComponent /> : <UnAuthComponent />}</>;
 }

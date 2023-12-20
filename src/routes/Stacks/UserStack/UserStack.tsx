@@ -7,9 +7,13 @@ import { useAppSelector } from "../../../redux/store";
 const Stack = createStackNavigator();
 
 const UserStack = () => {
-  const { role } = useAppSelector((state) => state.authentication);
+  const user = useAppSelector((state) => state.authentication.data);
 
-  return <>{role === "student" ? <StudentDrawer /> : <TeacherDrawer />}</>;
+  return (
+    <>
+      {user?.roles.includes("teacher") ? <TeacherDrawer /> : <StudentDrawer />}
+    </>
+  );
 };
 
 export default UserStack;

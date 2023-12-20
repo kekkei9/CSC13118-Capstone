@@ -1,5 +1,4 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
-import https from "https";
 import { ACCESS_TOKEN, REFRESH_TOKEN } from "../../constants/AuthConstant";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Response } from "../../types/Response";
@@ -29,10 +28,7 @@ interface CustomAxiosInstance extends AxiosInstance {
 }
 
 export const axiosClient: CustomAxiosInstance = axios.create({
-  baseURL: process.env.BACKEND_BASE_URL,
-  httpsAgent: new https.Agent({
-    rejectUnauthorized: false,
-  }),
+  baseURL: process.env.EXPO_PUBLIC_API_URL,
 });
 
 export const refreshAccessToken = async () => {

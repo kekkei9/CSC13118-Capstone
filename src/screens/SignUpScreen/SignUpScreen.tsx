@@ -12,10 +12,8 @@ import {
   VStack,
 } from "native-base";
 import { SvgUri } from "react-native-svg";
-import { signUpByEmailPassword } from "../../services/backend/AuthController";
 import { Controller, useForm } from "react-hook-form";
 import { useAppDispatch } from "../../redux/store";
-import { loginByEmailPassword } from "../../redux/authentication/authentication.slice";
 
 type FormValues = {
   email: string;
@@ -35,15 +33,15 @@ const SignUpScreen = () => {
   const onSubmit = (values: FormValues) => {
     const { email, password } = values;
 
-    signUpByEmailPassword(email, password);
-    // TODO: register, then redirect to sign in screen
-    // default as teacher
-    dispatch(
-      loginByEmailPassword({
-        email: "teacher@lettutor.com",
-        password: "123456",
-      })
-    );
+    // signUpByEmailPassword(email, password);
+    // // TODO: register, then redirect to sign in screen
+    // // default as teacher
+    // dispatch(
+    //   loginByEmailPassword({
+    //     email: "teacher@lettutor.com",
+    //     password: "123456",
+    //   })
+    // );
   };
 
   return (

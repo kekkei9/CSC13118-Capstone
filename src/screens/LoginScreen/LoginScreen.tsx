@@ -14,8 +14,8 @@ import {
 } from "native-base";
 import { SvgUri } from "react-native-svg";
 import { useAppDispatch } from "../../redux/store";
-import { loginByEmailPassword } from "../../redux/authentication/authentication.slice";
 import { Controller, useForm } from "react-hook-form";
+import { loginWithEmailPassword } from "../../redux/authentication/authentication.action";
 
 type FormValues = {
   email: string;
@@ -33,7 +33,7 @@ const LoginScreen = () => {
   const navigation = useNavigation();
 
   const onSubmit = (values: FormValues) => {
-    dispatch(loginByEmailPassword(values));
+    dispatch(loginWithEmailPassword(values));
   };
 
   return (

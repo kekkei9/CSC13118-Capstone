@@ -10,7 +10,7 @@ import { faBars } from "@fortawesome/free-solid-svg-icons";
 const TopNav = () => {
   const navigation = useNavigation<any>();
   const insets = useSafeAreaInsets();
-  const isAuth = useAppSelector((state) => state.authentication.isAuth);
+  const user = useAppSelector((state) => state.authentication.data);
 
   return (
     <Flex
@@ -37,7 +37,7 @@ const TopNav = () => {
       />
       <HStack space={2}>
         <ChooseLanguage />
-        {isAuth && (
+        {!!user ? (
           <Pressable
             backgroundColor={"rgb(228, 230, 235)"}
             rounded={"full"}
@@ -50,7 +50,7 @@ const TopNav = () => {
           >
             <FontAwesomeIcon icon={faBars} size={18} color="#1A1A1A" />
           </Pressable>
-        )}
+        ) : null}
       </HStack>
     </Flex>
   );
