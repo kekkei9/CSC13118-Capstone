@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import _ from "lodash";
 import {
   Button,
+  Container,
   Flex,
   HStack,
   Image,
@@ -37,12 +38,30 @@ const TutorItem = ({
           <Pressable alignSelf={"center"} onPress={onPress}>
             <Image
               source={{
-                uri: avatar,
+                uri: avatar || "",
               }}
               w={"70px"}
               h={"70px"}
               rounded={"full"}
               alt="Teacher Image"
+              fallbackElement={
+                <Container
+                  backgroundColor={"rgb(178, 54, 131)"}
+                  rounded={"full"}
+                  alignItems={"center"}
+                  justifyContent={"center"}
+                  textAlign={"center"}
+                  w={70}
+                  h={70}
+                >
+                  <Text fontSize={36} color={"white"}>
+                    {name
+                      .split(" ")
+                      .map((word) => word.charAt(0))
+                      .join("")}
+                  </Text>
+                </Container>
+              }
             />
           </Pressable>
           <Text fontWeight={600} fontSize={22}>
@@ -82,6 +101,7 @@ const TutorItem = ({
           <Tag
             key={index}
             content={_.startCase(specialty.replace(/-/g, " "))}
+            checked
           />
         ))}
       </Flex>

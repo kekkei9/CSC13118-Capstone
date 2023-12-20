@@ -16,6 +16,7 @@ import { SvgUri } from "react-native-svg";
 import { useAppDispatch } from "../../redux/store";
 import { Controller, useForm } from "react-hook-form";
 import { loginWithEmailPassword } from "../../redux/authentication/authentication.action";
+import { useToast } from "native-base";
 
 type FormValues = {
   email: string;
@@ -23,6 +24,7 @@ type FormValues = {
 };
 
 const LoginScreen = () => {
+  const toast = useToast();
   const {
     handleSubmit,
     control,
@@ -32,10 +34,18 @@ const LoginScreen = () => {
   const dispatch = useAppDispatch();
   const navigation = useNavigation();
 
-  const onSubmit = (values: FormValues) => {
+  const onSubmit = async (values: FormValues) => {
     // TODO: Remove this
     const values1 = { email: "student@lettutor.com", password: "123456" };
-    dispatch(loginWithEmailPassword(values1));
+    try {
+      const loginResult = await dispatch(
+        loginWithEmailPassword(values1)
+      ).unwrap();
+    } catch (error) {
+      toast.show({
+        description: "Login failed",
+      });
+    }
   };
 
   return (

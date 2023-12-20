@@ -1,24 +1,87 @@
+import { useNavigation } from "@react-navigation/native";
+import _ from "lodash";
 import {
   Button,
   Center,
+  Checkbox,
   Container,
+  Flex,
   HStack,
+  Input,
   ScrollView,
   Text,
   VStack,
 } from "native-base";
-import TutorItem from "../../components/TutorItem/TutorItem";
-import { useNavigation } from "@react-navigation/native";
+import { useEffect, useState } from "react";
 import useSWR from "swr";
+import Tag from "../../components/Tag/Tag";
+import TutorItem from "../../components/TutorItem/TutorItem";
+import {
+  TutorFilter,
+  initTutorFilter,
+  searchTutor,
+} from "../../services/backend/TutorController";
+import { axiosClient } from "../../services/backend/axiosClient";
 import { TutorListResponse } from "../../types/Response/TutorResponse";
+import { Tutor } from "../../types/Tutor";
 
 const PAGE_SIZE = 12;
 
+const FILTER_SPECIALTIES = [
+  "english-for-kids",
+  "english-for-busniess",
+  "conversational",
+  "starters",
+  "movers",
+  "flyers",
+  "ket",
+  "pet",
+  "ielts",
+  "toefl",
+  "toeic",
+];
+
 const TutorListScreen = () => {
+  const [tutorFilter, setTutorFilter] = useState<TutorFilter>(initTutorFilter);
+  const [search, setSearch] = useState<string>("");
+  const [selectedGroups, setSelectedGroups] = useState<string[]>([]);
   const navigation = useNavigation();
 
-  const { data: tutorsResponse } = useSWR<TutorListResponse>(
-    "tutor/more?perPage=9&page=1"
+  useEffect(() => {
+    let resultNationality: any = {};
+    if (selectedGroups.includes("isVietnamese")) {
+      resultNationality = { isVietNamese: true };
+    }
+    if (selectedGroups.includes("isForeign")) {
+      if (selectedGroups.includes("isVietnamese")) {
+        delete resultNationality.isVietNamese;
+      } else {
+        resultNationality = { ...resultNationality, isVietNamese: false };
+      }
+    }
+    if (selectedGroups.includes("isNative")) {
+      resultNationality = { ...resultNationality, isNative: true };
+    }
+    console.log(resultNationality);
+    setTutorFilter((prev) => ({
+      ...prev,
+      nationality: resultNationality,
+    }));
+  }, [selectedGroups]);
+
+  const { data: tutorsResponse } = useSWR<Tutor[]>(
+    `tutorList?search=${search}&tutorFilters=${Object.values(
+      tutorFilter || {}
+    ).join("")}`,
+    async () => {
+      if (!tutorFilter)
+        return (
+          await axiosClient.get<TutorListResponse>(
+            `tutor/more?perPage=${PAGE_SIZE}&page=1`
+          )
+        ).data.tutors.rows;
+      return (await searchTutor(tutorFilter, search, 1, PAGE_SIZE)).data.rows;
+    }
   );
 
   return (
@@ -58,12 +121,78 @@ const TutorListScreen = () => {
           <Text fontWeight={700} fontSize={29}>
             Find a tutor
           </Text>
-          {/* select section */}
+          <VStack space={2.5}>
+            <Checkbox.Group
+              accessibilityLabel="choose values"
+              onChange={setSelectedGroups}
+            >
+              <HStack space={2} mb={2}>
+                <Input
+                  flex={1}
+                  placeholder="Enter tutor name..."
+                  value={search}
+                  onChangeText={setSearch}
+                />
+                <Checkbox flex={1} value="isVietnamese">
+                  Vietnamese Tutor
+                </Checkbox>
+              </HStack>
+              <HStack space={2}>
+                <Checkbox flex={1} value="isForeign">
+                  Foreign Tutor
+                </Checkbox>
+                <Checkbox flex={1} value="isNative">
+                  Native English Tutor
+                </Checkbox>
+              </HStack>
+            </Checkbox.Group>
+            <Flex wrap="wrap" flexDirection="row" w="full">
+              <Tag
+                content={"All"}
+                checked={tutorFilter?.specialties.length === 0}
+                onPress={() =>
+                  setTutorFilter((prev) => ({
+                    ...(prev || initTutorFilter),
+                    specialties: [],
+                  }))
+                }
+              />
+              {FILTER_SPECIALTIES.map((specialty, index) => (
+                <Tag
+                  key={index}
+                  content={_.startCase(specialty.replace(/-/g, " "))}
+                  checked={tutorFilter?.specialties.includes(specialty)}
+                  onPress={() =>
+                    setTutorFilter((prev) => ({
+                      ...prev,
+                      specialties: [specialty],
+                    }))
+                  }
+                />
+              ))}
+            </Flex>
+            <Button
+              onPress={() => {
+                setTutorFilter(initTutorFilter);
+                setSearch("");
+              }}
+              variant={"outline"}
+              rounded={"full"}
+              borderColor={"#1890ff"}
+              alignItems={"center"}
+              justifyContent={"center"}
+              w={120}
+              py={1}
+              px={4}
+            >
+              <Text color={"#1890ff"}>Reset Filters</Text>
+            </Button>
+          </VStack>
           <Text fontSize={20} fontWeight={600} my={1.5}>
             Recommended Tutors
           </Text>
 
-          {tutorsResponse?.tutors.rows.map((tutor) => (
+          {tutorsResponse?.map((tutor) => (
             <TutorItem
               onPress={() => navigation.navigate("Tutor Detail" as never)}
               tutor={tutor}
