@@ -9,11 +9,17 @@ import {
 } from "native-base";
 import TutorItem from "../../components/TutorItem/TutorItem";
 import { useNavigation } from "@react-navigation/native";
+import useSWR from "swr";
+import { TutorListResponse } from "../../types/Response/TutorResponse";
 
 const PAGE_SIZE = 12;
 
 const TutorListScreen = () => {
   const navigation = useNavigation();
+
+  const { data: tutorsResponse } = useSWR<TutorListResponse>(
+    "tutor/more?perPage=9&page=1"
+  );
 
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
@@ -56,10 +62,12 @@ const TutorListScreen = () => {
           <Text fontSize={20} fontWeight={600} my={1.5}>
             Recommended Tutors
           </Text>
-          {[...Array(PAGE_SIZE)].map((_, index) => (
+
+          {tutorsResponse?.tutors.rows.map((tutor) => (
             <TutorItem
               onPress={() => navigation.navigate("Tutor Detail" as never)}
-              key={index}
+              tutor={tutor}
+              key={tutor.id}
             />
           ))}
         </VStack>

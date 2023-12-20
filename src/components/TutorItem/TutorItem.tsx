@@ -1,24 +1,29 @@
-import {
-  HStack,
-  VStack,
-  Text,
-  Flex,
-  Button,
-  Pressable,
-  Image,
-  Container,
-} from "native-base";
-import { SvgUri } from "react-native-svg";
-import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { faStar } from "@fortawesome/free-solid-svg-icons";
 import { faCalendarDays, faHeart } from "@fortawesome/free-regular-svg-icons";
+import { faStar } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import _ from "lodash";
+import {
+  Button,
+  Flex,
+  HStack,
+  Image,
+  Pressable,
+  Text,
+  VStack,
+} from "native-base";
+import { countryNameMapper } from "../../constants/CountryConstant";
+import { Tutor } from "../../types/Tutor";
 import Tag from "../Tag/Tag";
 
 type TutorItemProps = {
+  tutor: Tutor;
   onPress: () => void;
 };
 
-const TutorItem = ({ onPress }: TutorItemProps) => {
+const TutorItem = ({
+  tutor: { avatar, name, country, bio, rating, specialties },
+  onPress,
+}: TutorItemProps) => {
   return (
     <VStack
       p={5}
@@ -32,7 +37,7 @@ const TutorItem = ({ onPress }: TutorItemProps) => {
           <Pressable alignSelf={"center"} onPress={onPress}>
             <Image
               source={{
-                uri: "https://api.app.lettutor.com/avatar/83802576-70fe-4394-b27a-3d9e8b50f1b7avatar1649512219387.jpg",
+                uri: avatar,
               }}
               w={"70px"}
               h={"70px"}
@@ -41,18 +46,26 @@ const TutorItem = ({ onPress }: TutorItemProps) => {
             />
           </Pressable>
           <Text fontWeight={600} fontSize={22}>
-            April Baldo
+            {name}
           </Text>
           <HStack space={2}>
-            <SvgUri
-              uri="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.4.3/flags/4x3/ph.svg"
-              width={22}
-              height={22}
-            />
-            <Text color={"#0B2239"}>Philippines (the)</Text>
+            {country ? (
+              <Image
+                source={{
+                  uri: `https://flagcdn.com/48x36/${country?.toLowerCase()}.png`,
+                }}
+                width={22}
+                height={22}
+                alt="Country Flag"
+                style={{ objectFit: "contain" }}
+              />
+            ) : null}
+            <Text color={"#0B2239"}>
+              {countryNameMapper[country as keyof typeof countryNameMapper]}
+            </Text>
           </HStack>
           <HStack space={1}>
-            {[...Array(5)].map((_, index) => (
+            {[...Array(Math.floor(rating))].map((_, index) => (
               <FontAwesomeIcon
                 icon={faStar}
                 key={index}
@@ -65,18 +78,15 @@ const TutorItem = ({ onPress }: TutorItemProps) => {
         <FontAwesomeIcon icon={faHeart} color="rgb(0, 113, 240)" size={26} />
       </HStack>
       <Flex wrap="wrap" flexDirection="row" w="full" mt={5}>
-        {["English for Business", "IELTS", "PET", "KET"].map((tag, index) => (
-          <Tag key={index} content={tag} />
+        {specialties.split(",").map((specialty, index) => (
+          <Tag
+            key={index}
+            content={_.startCase(specialty.replace(/-/g, " "))}
+          />
         ))}
       </Flex>
       <Text numberOfLines={4} opacity={0.6}>
-        Hello! My name is April Baldo, you can just call me Teacher April. I am
-        an English teacher and currently teaching in senior high school. I have
-        been teaching grammar and literature for almost 10 years. I am fond of
-        reading and teaching literature as one way of knowing one’s beliefs and
-        culture. I am friendly and full of positivity. I love teaching because I
-        know each student has something to bring on. Molding them to become an
-        individual is a great success.
+        {bio}
       </Text>
       <HStack w={"full"} display={"flex"} justifyContent={"flex-end"}>
         <Button

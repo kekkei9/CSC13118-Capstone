@@ -27,6 +27,7 @@
     "expo": "~49.0.15",
     "expo-font": "~11.4.0",
     "expo-status-bar": "~1.6.0",
+    "lodash": "^4.17.21",
     "native-base": "^3.4.28",
     "normalize-css-color": "^1.0.2",
     "patch-package": "^8.0.0",
@@ -54,6 +55,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
+    "@types/lodash": "^4.14.202",
     "@types/react": "~18.2.14",
     "@types/react-native-video": "^5.0.17",
     "typescript": "^5.1.3"

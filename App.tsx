@@ -9,6 +9,8 @@ import store from "./src/redux/store";
 import StudentDrawer from "./src/routes/Drawers/StudentDrawer/StudentDrawer";
 import AuthStack from "./src/routes/Stacks/AuthStack";
 import UserStack from "./src/routes/Stacks/UserStack";
+import { SWRConfig } from "swr";
+import { fetcher } from "./src/services/backend/axiosClient";
 
 const theme = extendTheme({
   fontConfig: {
@@ -85,12 +87,22 @@ export default function App() {
   }
 
   return (
-    <Provider store={store}>
-      <NativeBaseProvider theme={theme}>
-        <NavigationContainer>
-          <AuthProvider authComponent={UserStack} unAuthComponent={AuthStack} />
-        </NavigationContainer>
-      </NativeBaseProvider>
-    </Provider>
+    <SWRConfig
+      value={{
+        refreshInterval: 3000,
+        fetcher: fetcher,
+      }}
+    >
+      <Provider store={store}>
+        <NativeBaseProvider theme={theme}>
+          <NavigationContainer>
+            <AuthProvider
+              authComponent={UserStack}
+              unAuthComponent={AuthStack}
+            />
+          </NavigationContainer>
+        </NativeBaseProvider>
+      </Provider>
+    </SWRConfig>
   );
 }

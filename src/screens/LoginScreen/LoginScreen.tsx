@@ -33,7 +33,9 @@ const LoginScreen = () => {
   const navigation = useNavigation();
 
   const onSubmit = (values: FormValues) => {
-    dispatch(loginWithEmailPassword(values));
+    // TODO: Remove this
+    const values1 = { email: "student@lettutor.com", password: "123456" };
+    dispatch(loginWithEmailPassword(values1));
   };
 
   return (
@@ -83,7 +85,7 @@ const LoginScreen = () => {
                   />
                 )}
                 name="email"
-                rules={{ required: "Email is required", minLength: 6 }}
+                // rules={{ required: "Email is required", minLength: 6 }}
               />
             </Flex>
             <Flex mb={"6"}>
@@ -100,7 +102,7 @@ const LoginScreen = () => {
                   />
                 )}
                 name="password"
-                rules={{ required: "Password is required", minLength: 6 }}
+                // rules={{ required: "Password is required", minLength: 6 }}
               />
             </Flex>
             <Pressable
