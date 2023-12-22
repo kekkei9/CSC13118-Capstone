@@ -1,8 +1,14 @@
 import { Text, VStack, ScrollView, View } from "native-base";
 import { SvgUri } from "react-native-svg";
 import BookedItem from "../../components/BookedItem";
+import useSWR from "swr";
 
 const ScheduleScreen = () => {
+  const { data: ownSchedule } = useSWR<{
+    message: "Get schedules successful";
+    data: [];
+  }>("/schedule");
+
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
       <VStack flex={1} px={2.5} py={9}>
@@ -33,7 +39,7 @@ const ScheduleScreen = () => {
           <Text fontWeight={700}>Latest book</Text>
         </VStack>
         <VStack px={7} space={6}>
-          {[...Array(2)].map((_, index) => (
+          {ownSchedule?.data.map((_, index) => (
             <BookedItem key={index} />
           ))}
         </VStack>

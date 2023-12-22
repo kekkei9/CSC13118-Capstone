@@ -1,5 +1,8 @@
-import { faCalendarDays, faHeart } from "@fortawesome/free-regular-svg-icons";
-import { faStar } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCalendarDays,
+  faHeart as faHeartRegular,
+} from "@fortawesome/free-regular-svg-icons";
+import { faHeart as faHeartSolid } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import _ from "lodash";
 import {
@@ -11,19 +14,32 @@ import {
   Pressable,
   Text,
   VStack,
+  useToast,
 } from "native-base";
 import { countryNameMapper } from "../../constants/CountryConstant";
 import { Tutor } from "../../types/Tutor";
+import RatingDisplay from "../RatingDisplay";
 import Tag from "../Tag/Tag";
 
 type TutorItemProps = {
   tutor: Tutor;
   onPress: () => void;
+  onPressFavorite: () => void;
 };
 
 const TutorItem = ({
-  tutor: { avatar, name, country, bio, rating, specialties },
+  tutor: {
+    avatar,
+    name,
+    country,
+    bio,
+    rating,
+    specialties,
+    isFavoriteTutor,
+    id,
+  },
   onPress,
+  onPressFavorite,
 }: TutorItemProps) => {
   return (
     <VStack
@@ -84,17 +100,16 @@ const TutorItem = ({
             </Text>
           </HStack>
           <HStack space={1}>
-            {[...Array(Math.floor(rating))].map((_, index) => (
-              <FontAwesomeIcon
-                icon={faStar}
-                key={index}
-                color="#F6D714"
-                size={12}
-              />
-            ))}
+            <RatingDisplay numberOfStars={rating} />
           </HStack>
         </VStack>
-        <FontAwesomeIcon icon={faHeart} color="rgb(0, 113, 240)" size={26} />
+        <Pressable onPress={onPressFavorite}>
+          <FontAwesomeIcon
+            icon={isFavoriteTutor ? faHeartSolid : faHeartRegular}
+            color={isFavoriteTutor ? "#FF6251" : "#1890ff"}
+            size={26}
+          />
+        </Pressable>
       </HStack>
       <Flex wrap="wrap" flexDirection="row" w="full" mt={5}>
         {specialties.split(",").map((specialty, index) => (

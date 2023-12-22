@@ -3,6 +3,7 @@ import { faStar } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { VStack, Text, HStack, Image, Flex } from "native-base";
 import { SvgUri } from "react-native-svg";
+import RatingDisplay from "../RatingDisplay";
 
 const HistoryItem = () => {
   return (
@@ -68,14 +69,7 @@ const HistoryItem = () => {
         >
           <HStack alignItems={"center"}>
             <Text mr={2}>Rating: </Text>
-            {[...Array(5)].map((_, index) => (
-              <FontAwesomeIcon
-                icon={faStar}
-                key={index}
-                color="#F6D714"
-                size={16}
-              />
-            ))}
+            <RatingDisplay numberOfStars={5} />
           </HStack>
           <HStack space={2}>
             <Text color={"#1890ff"}>Edit</Text>

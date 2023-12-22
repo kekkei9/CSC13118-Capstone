@@ -36,7 +36,7 @@ const LoginScreen = () => {
 
   const onSubmit = async (values: FormValues) => {
     // TODO: Remove this
-    const values1 = { email: "student@lettutor.com", password: "123456" };
+    const values1 = { email: "phhai@ymail.com", password: "123456" };
     try {
       const loginResult = await dispatch(
         loginWithEmailPassword(values1)

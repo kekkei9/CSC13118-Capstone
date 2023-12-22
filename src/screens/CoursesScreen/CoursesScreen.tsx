@@ -17,6 +17,7 @@ import { SvgUri } from "react-native-svg";
 import { Animated, Dimensions, Pressable, StatusBar } from "react-native";
 import { SceneMap, TabView } from "react-native-tab-view";
 import { useState } from "react";
+import useSWR from "swr";
 
 const FirstRoute = () => (
   <VStack flex={1} my="4">
@@ -121,6 +122,10 @@ const CoursesScreen = () => {
     );
   };
 
+  const { data: coursesList } = useSWR<BaseResponse<>>(
+    "/course?page=1&size=100"
+  );
+
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
       <VStack px={10} py={9} flex={1}>
@@ -174,7 +179,7 @@ const CoursesScreen = () => {
         </Flex>
         <VStack pt={8} space={16}>
           {/* Categories -> Courses */}
-          {[...Array(3)].map((_, index) => (
+          {coursesList.map((_, index) => (
             <VStack justifyContent={"center"} key={index} space={8}>
               <Text fontSize={28} fontWeight={500}>
                 English For Traveling

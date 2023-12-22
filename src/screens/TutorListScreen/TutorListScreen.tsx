@@ -9,8 +9,10 @@ import {
   HStack,
   Input,
   ScrollView,
+  Skeleton,
   Text,
   VStack,
+  useToast,
 } from "native-base";
 import { useEffect, useState } from "react";
 import useSWR from "swr";
@@ -18,12 +20,14 @@ import Tag from "../../components/Tag/Tag";
 import TutorItem from "../../components/TutorItem/TutorItem";
 import {
   TutorFilter,
+  addTutorToFavorite,
   initTutorFilter,
   searchTutor,
 } from "../../services/backend/TutorController";
 import { axiosClient } from "../../services/backend/axiosClient";
 import { TutorListResponse } from "../../types/Response/TutorResponse";
 import { Tutor } from "../../types/Tutor";
+import { TutorsStackNavigationProp } from "../../types/Route/Stack";
 
 const PAGE_SIZE = 12;
 
@@ -42,12 +46,14 @@ const FILTER_SPECIALTIES = [
 ];
 
 const TutorListScreen = () => {
+  const toast = useToast();
+  const navigation = useNavigation<TutorsStackNavigationProp>();
   const [tutorFilter, setTutorFilter] = useState<TutorFilter>(initTutorFilter);
   const [search, setSearch] = useState<string>("");
   const [selectedGroups, setSelectedGroups] = useState<string[]>([]);
-  const navigation = useNavigation();
 
   useEffect(() => {
+    if (!selectedGroups) return;
     let resultNationality: any = {};
     if (selectedGroups.includes("isVietnamese")) {
       resultNationality = { isVietNamese: true };
@@ -62,14 +68,13 @@ const TutorListScreen = () => {
     if (selectedGroups.includes("isNative")) {
       resultNationality = { ...resultNationality, isNative: true };
     }
-    console.log(resultNationality);
     setTutorFilter((prev) => ({
       ...prev,
       nationality: resultNationality,
     }));
   }, [selectedGroups]);
 
-  const { data: tutorsResponse } = useSWR<Tutor[]>(
+  const { data: tutorsResponse, isLoading } = useSWR<Tutor[]>(
     `tutorList?search=${search}&tutorFilters=${Object.values(
       tutorFilter || {}
     ).join("")}`,
@@ -83,6 +88,13 @@ const TutorListScreen = () => {
       return (await searchTutor(tutorFilter, search, 1, PAGE_SIZE)).data.rows;
     }
   );
+
+  const handleFavorite = async (tutorId: string) => {
+    await addTutorToFavorite(tutorId);
+    toast.show({
+      title: "Successfully toggle favorite",
+    });
+  };
 
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
@@ -121,26 +133,27 @@ const TutorListScreen = () => {
           <Text fontWeight={700} fontSize={29}>
             Find a tutor
           </Text>
+          <Input
+            flex={1}
+            placeholder="Enter tutor name..."
+            value={search}
+            onChangeText={setSearch}
+          />
           <VStack space={2.5}>
             <Checkbox.Group
               accessibilityLabel="choose values"
               onChange={setSelectedGroups}
+              value={selectedGroups}
             >
               <HStack space={2} mb={2}>
-                <Input
-                  flex={1}
-                  placeholder="Enter tutor name..."
-                  value={search}
-                  onChangeText={setSearch}
-                />
                 <Checkbox flex={1} value="isVietnamese">
                   Vietnamese Tutor
                 </Checkbox>
-              </HStack>
-              <HStack space={2}>
                 <Checkbox flex={1} value="isForeign">
                   Foreign Tutor
                 </Checkbox>
+              </HStack>
+              <HStack space={2}>
                 <Checkbox flex={1} value="isNative">
                   Native English Tutor
                 </Checkbox>
@@ -174,6 +187,7 @@ const TutorListScreen = () => {
             <Button
               onPress={() => {
                 setTutorFilter(initTutorFilter);
+                setSelectedGroups([]);
                 setSearch("");
               }}
               variant={"outline"}
@@ -191,11 +205,45 @@ const TutorListScreen = () => {
           <Text fontSize={20} fontWeight={600} my={1.5}>
             Recommended Tutors
           </Text>
+          {isLoading ? (
+            <>
+              {[...Array(3)].map((_) => (
+                <Center w="100%">
+                  <VStack
+                    w="90%"
+                    maxW="400"
+                    borderWidth="1"
+                    space={8}
+                    overflow="hidden"
+                    rounded="md"
+                    _dark={{
+                      borderColor: "coolGray.500",
+                    }}
+                    _light={{
+                      borderColor: "coolGray.200",
+                    }}
+                  >
+                    <Skeleton h="40" />
+                    <Skeleton.Text px="4" />
+                    <Skeleton
+                      px="4"
+                      my="4"
+                      rounded="md"
+                      startColor="primary.100"
+                    />
+                  </VStack>
+                </Center>
+              ))}
+            </>
+          ) : null}
 
           {tutorsResponse?.map((tutor) => (
             <TutorItem
-              onPress={() => navigation.navigate("Tutor Detail" as never)}
+              onPress={() =>
+                navigation.navigate("Tutor Detail", { tutorId: tutor.id })
+              }
               tutor={tutor}
+              onPressFavorite={() => handleFavorite(tutor.id)}
               key={tutor.id}
             />
           ))}

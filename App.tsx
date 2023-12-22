@@ -1,16 +1,17 @@
-import { createDrawerNavigator } from "@react-navigation/drawer";
 import { NavigationContainer } from "@react-navigation/native";
 import { useFonts } from "expo-font";
 import { NativeBaseProvider, extendTheme } from "native-base";
 import "react-native-gesture-handler";
 import { Provider } from "react-redux";
+import { SWRConfig } from "swr";
 import AuthProvider from "./src/containers/AuthProvider";
 import store from "./src/redux/store";
-import StudentDrawer from "./src/routes/Drawers/StudentDrawer/StudentDrawer";
 import AuthStack from "./src/routes/Stacks/AuthStack";
 import UserStack from "./src/routes/Stacks/UserStack";
-import { SWRConfig } from "swr";
 import { fetcher } from "./src/services/backend/axiosClient";
+// import { LogBox } from "react-native";
+// LogBox.ignoreLogs(["Warning: ..."]); // Ignore log notification by message
+// LogBox.ignoreAllLogs(); //Ignore all log notifications
 
 const theme = extendTheme({
   fontConfig: {

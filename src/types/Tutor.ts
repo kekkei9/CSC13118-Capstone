@@ -45,6 +45,7 @@ export type Tutor = {
   youtubeVideoId: null;
   price: number;
   isOnline: boolean;
+  isFavoriteTutor: boolean;
 };
 
 export type Feedback = {
@@ -85,4 +86,38 @@ export type Feedback = {
     deletedAt: null | any;
     studentGroupId: null | any;
   };
+};
+
+type TutorUser = {
+  avatar: string;
+  caredByStaffId: null | any;
+  country: string;
+  courses: any[];
+  id: string;
+  isPublicRecord: boolean;
+  language: string;
+  level: null | any;
+  name: string;
+  studentGroupId: null | any;
+  zaloUserId: null | any;
+};
+
+export type TutorDetail = {
+  User: TutorUser;
+  accent: string;
+  avgRating: number;
+  bio: string;
+  education?: string;
+  experience?: string;
+  interests: string;
+  isFavorite: boolean;
+  isNative: null;
+  languages: string;
+  profession: string;
+  rating: null;
+  specialties: string;
+  targetStudent: string;
+  totalFeedback: number;
+  video: string;
+  youtubeVideoId: null;
 };
