@@ -8,7 +8,7 @@ const Stack = createStackNavigator();
 const CoursesStack = () => {
   return (
     <Stack.Navigator initialRouteName="Course List">
-      <Stack.Screen name="Course List" component={CoursesScreen} />
+      <Stack.Screen name="Course List" component={CoursesScreen} options={{headerShown: false}}/>
       <Stack.Screen name="Course Detail" component={CourseDetailScreen} />
       <Stack.Screen name="Explore Course" component={ExploreCourseScreen} />
     </Stack.Navigator>

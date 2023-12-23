@@ -1,9 +1,16 @@
 import { ScrollView, Text, VStack } from "native-base";
 import { SvgUri } from "react-native-svg";
-import BookedItem from "../../components/BookedItem";
 import HistoryItem from "../../components/HistoryItem";
+import useSWR from "swr";
+import { BaseResponseList } from "../../types/Response/BaseResponse";
+import { HistoryItem as HistoryItemType } from "../../types/Schedule";
+
+const PAGE_SIZE = 20;
 
 const HistoryScreen = () => {
+
+  const {data: historyResponse} = useSWR<BaseResponseList<HistoryItemType>>(`/booking/list/student?page=1&perPage${PAGE_SIZE}0&inFuture=0&orderBy=meeting&sortBy=desc`)
+
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
       <VStack px={2.5} py={9} flex={1}>
@@ -30,8 +37,8 @@ const HistoryScreen = () => {
           </VStack>
         </VStack>
         <VStack px={7} space={6} mt={6}>
-          {[...Array(5)].map((_, index) => (
-            <HistoryItem key={index} />
+          {historyResponse?.data.rows.map((historyItem, index) => (
+            <HistoryItem historyItem={historyItem} key={index} />
           ))}
         </VStack>
       </VStack>

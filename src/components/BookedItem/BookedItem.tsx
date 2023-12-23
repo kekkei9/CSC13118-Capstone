@@ -4,9 +4,19 @@ import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { useNavigation } from "@react-navigation/native";
 import { Text, VStack, HStack, Image, Button } from "native-base";
 import { SvgUri } from "react-native-svg";
+import { HistoryItem } from "../../types/Schedule";
+import dayjs from "dayjs";
+import { countryNameMapper } from "../../constants/CountryConstant";
 
-const BookedItem = () => {
+type BookeditemType = {
+  scheduleItem: HistoryItem;
+}
+
+const BookedItem = ({scheduleItem}: BookeditemType) => {
   const navigation = useNavigation();
+
+  const {scheduleInfo} = scheduleItem.scheduleDetailInfo;
+  const {tutorInfo, startTimestamp, startTime, endTime} = scheduleInfo
 
   return (
     <VStack
@@ -17,13 +27,13 @@ const BookedItem = () => {
       p={4}
     >
       <Text fontSize={24} fontWeight={700}>
-        Sat, 04 Nov 23
+        {dayjs(startTimestamp).format("ddd, DD MMM YY")}
       </Text>
       <Text>1 lesson</Text>
       <HStack backgroundColor={"white"} space={3} mt={6} p={3}>
         <Image
           source={{
-            uri: "https://api.app.lettutor.com/avatar/83802576-70fe-4394-b27a-3d9e8b50f1b7avatar1649512219387.jpg",
+            uri: tutorInfo.avatar,
           }}
           w={"68px"}
           h={"68px"}
@@ -31,14 +41,20 @@ const BookedItem = () => {
           alt="Teacher Image"
         />
         <VStack>
-          <Text>Keegan</Text>
+          <Text>{tutorInfo.name}</Text>
           <HStack space={2}>
-            <SvgUri
-              uri="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.4.3/flags/4x3/tn.svg"
-              width={22}
-              height={22}
-            />
-            <Text>Tunisia</Text>
+            {tutorInfo.country ? (
+              <Image
+                source={{
+                  uri: `https://flagcdn.com/48x36/${tutorInfo.country?.toLowerCase()}.png`,
+                }}
+                width={22}
+                height={22}
+                alt="Country Flag"
+                style={{ objectFit: "contain" }}
+              />
+            ) : null}
+            <Text>{countryNameMapper[tutorInfo.country as keyof typeof countryNameMapper]}</Text>
           </HStack>
           <HStack space={2}>
             <FontAwesomeIcon icon={faComment} color="#1890ff" />
@@ -49,7 +65,7 @@ const BookedItem = () => {
       <VStack backgroundColor={"white"} mt={6} px={5} pt={3} pb={1.5}>
         <HStack alignItems={"center"} mb={4}>
           <Text flex={1} fontSize={20}>
-            18:00 - 18:25
+            {startTime} - {endTime}
           </Text>
           <Button>Cancel</Button>
         </HStack>
@@ -61,13 +77,13 @@ const BookedItem = () => {
             px={4}
             py={3}
           >
-            <HStack alignItems={"center"} space={1.5}>
+            <HStack alignItems={"center"} space={1.5} flex={1}>
               <FontAwesomeIcon icon={faChevronDown} size={12} />
               <Text>Request for lesson</Text>
             </HStack>
-            <Text color="rgb(0, 113, 240)">Edit request</Text>
+            <Text color="rgb(0, 113, 240)" flex={1} textAlign={"right"}>Edit request</Text>
           </HStack>
-          <Text p={4}>
+          <Text p={4} color={!!scheduleItem.studentRequest ? "inherit" : "#8399a7"}>
             Currently there are no requests for this class. Please write down
             any requests for the teacher.
           </Text>

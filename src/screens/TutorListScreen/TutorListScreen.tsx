@@ -14,7 +14,7 @@ import {
   VStack,
   useToast,
 } from "native-base";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import useSWR from "swr";
 import Tag from "../../components/Tag/Tag";
 import TutorItem from "../../components/TutorItem/TutorItem";
@@ -25,9 +25,12 @@ import {
   searchTutor,
 } from "../../services/backend/TutorController";
 import { axiosClient } from "../../services/backend/axiosClient";
+import { HistoryItem as HistoryItemType } from "../../types/Schedule";
 import { TutorListResponse } from "../../types/Response/TutorResponse";
-import { Tutor } from "../../types/Tutor";
 import { TutorsStackNavigationProp } from "../../types/Route/Stack";
+import { Tutor } from "../../types/Tutor";
+import { BaseResponseList } from "../../types/Response/BaseResponse";
+import dayjs from "dayjs";
 
 const PAGE_SIZE = 12;
 
@@ -89,12 +92,34 @@ const TutorListScreen = () => {
     }
   );
 
+  //get latest schedule
+
+  const {data: scheduleResponse} = useSWR<BaseResponseList<HistoryItemType>>("/booking/list/student?page=1&perPage10&inFuture=1&orderBy=meeting&sortBy=asc")
+  const latestSchedule = scheduleResponse?.data.rows[0];
+
   const handleFavorite = async (tutorId: string) => {
     await addTutorToFavorite(tutorId);
     toast.show({
       title: "Successfully toggle favorite",
     });
   };
+
+  const lessonTime = dayjs(latestSchedule?.scheduleDetailInfo.endPeriodTimestamp).diff(dayjs(latestSchedule?.scheduleDetailInfo.startPeriodTimestamp), "minutes")
+  const hours = Math.floor(lessonTime / 60);
+  const minutes = lessonTime % 60;
+
+  const timerRef= useRef<any>(null);
+  const [upcomingTimeInSeconds, setUpcomingTimeInSeconds] = useState<number>(0);
+  useEffect(() => { 
+    timerRef.current = setInterval(() => {
+      setUpcomingTimeInSeconds(dayjs(latestSchedule?.scheduleDetailInfo.startPeriodTimestamp).diff(dayjs(), "seconds"));
+    }, 500);
+    return () => clearInterval(timerRef.current);
+  })
+
+  const upcomingTimeInMinutes = Math.floor(upcomingTimeInSeconds / 60);
+  const upcomingTimeInHours = Math.floor(upcomingTimeInMinutes / 60);
+  const displayUpcomingTime = `${upcomingTimeInHours}:${upcomingTimeInMinutes % 60}:${upcomingTimeInSeconds % 60}`;
 
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
@@ -109,24 +134,27 @@ const TutorListScreen = () => {
           <Text fontSize={30} mt={3} color={"white"}>
             Upcoming lesson
           </Text>
-          <HStack w="full" mt={3}>
-            <Container p={2}>
-              <Text fontSize={20} color={"white"}>
-                Sun, 05 Nov 23 18:00 - 18:25
+          <HStack w="full" mt={3} alignItems={"center"}>
+            <Container p={2} flex={2} >
+              <Text fontSize={20} color={"white"} textAlign={"center"}>
+                {dayjs(latestSchedule?.scheduleDetailInfo.startPeriodTimestamp).format("ddd, DD MMM YY")}{" "}
+                {dayjs(latestSchedule?.scheduleDetailInfo.startPeriodTimestamp).format("HH:mm")} - {dayjs(latestSchedule?.scheduleDetailInfo.endPeriodTimestamp).format("HH:mm")}
               </Text>
-              <Text color={"#ffff00"}>(starts in 16:06:41)</Text>
+              <Text color={"#ffff00"} textAlign={"center"}>(starts in {displayUpcomingTime})</Text>
             </Container>
             <Button
               fontSize={16}
-              flex={1}
+              flex={3}
+              height={12}
               flexShrink={0}
               onPress={() => navigation.navigate("Dial" as never)}
+              rounded={"full"}
             >
               Enter lesson room
             </Button>
           </HStack>
           <Text fontSize={16} color={"white"} mt={2}>
-            Total lesson time is 515 hours 0 minutes
+            Total lesson time is {hours} hours {minutes} minutes 
           </Text>
         </Center>
         <VStack py={8} px={5} space={5}>

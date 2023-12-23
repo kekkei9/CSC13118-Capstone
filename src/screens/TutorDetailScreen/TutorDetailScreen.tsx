@@ -1,3 +1,9 @@
+import { faHeart as faHeartRegular } from "@fortawesome/free-regular-svg-icons";
+import {
+  faCircleExclamation,
+  faHeart as faHeartSolid,
+} from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { RouteProp, useRoute } from "@react-navigation/native";
 import ISO6391 from "iso-639-1";
 import _ from "lodash";
@@ -15,15 +21,15 @@ import useSWR from "swr";
 import RatingDisplay from "../../components/RatingDisplay";
 import Tag from "../../components/Tag/Tag";
 import { countryNameMapper } from "../../constants/CountryConstant";
-import { TutorStackParamList } from "../../types/Route/Stack";
-import { TutorDetail } from "../../types/Tutor";
-import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import {
-  faCircleExclamation,
-  faHeart as faHeartSolid,
-} from "@fortawesome/free-solid-svg-icons";
-import { faHeart as faHeartRegular } from "@fortawesome/free-regular-svg-icons";
+import BookingTable from "../../containers/BookingTable";
 import { addTutorToFavorite } from "../../services/backend/TutorController";
+import { BaseResponseList } from "../../types/Response/BaseResponse";
+import { TutorStackParamList } from "../../types/Route/Stack";
+import { Feedback, TutorDetail } from "../../types/Tutor";
+import { timeDiff } from "../../utils/date";
+
+//to fetch all tutors
+const PAGE_SIZE = 100;
 
 const TutorDetailScreen = () => {
   const toast = useToast();
@@ -33,7 +39,11 @@ const TutorDetailScreen = () => {
     `/tutor/${params.tutorId}`
   );
 
+  const { data: tutorFeedbacks } = useSWR<BaseResponseList<Feedback>>(`/feedback/v2/${params.tutorId}?perPage=${PAGE_SIZE}&page=1`);
+
   if (!tutor) return null;
+
+  // TODO:: Remove slice in feedbacks
 
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
@@ -187,10 +197,31 @@ const TutorDetailScreen = () => {
           Other reviews
         </Text>
         <VStack>
-          {/* {params.feedbacks.map((feedback, index) => (
-            <Text>{feedback.content}</Text>
-          ))} */}
+          {tutorFeedbacks?.data.rows.slice(0,10)?.map((feedback) => (
+            <HStack py={4} key={feedback.id} space={3}>
+              <Image 
+                source={{
+                  uri: feedback.firstInfo.avatar || "",
+                }}
+                width={8}
+                height={8}
+                rounded={"full"}
+                alt="User Image"
+              />
+              <VStack space={1}>
+                <HStack space={2}>
+                  <Text>{feedback.firstInfo.name}</Text>
+                  <Text>{timeDiff(feedback.createdAt)}</Text>
+                </HStack>
+                <HStack space={2}>
+                  <RatingDisplay numberOfStars={feedback.rating}/>
+                </HStack>
+                <Text>{feedback.content}</Text>
+              </VStack>
+            </HStack>
+          ))}
         </VStack>
+        <BookingTable tutorId={params.tutorId} />
       </VStack>
     </ScrollView>
   );

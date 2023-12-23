@@ -1,6 +1,6 @@
-import { NavigationContainer } from "@react-navigation/native";
+import { DefaultTheme, NavigationContainer } from "@react-navigation/native";
 import { useFonts } from "expo-font";
-import { NativeBaseProvider, extendTheme } from "native-base";
+import { Container, NativeBaseProvider, View, extendTheme } from "native-base";
 import "react-native-gesture-handler";
 import { Provider } from "react-redux";
 import { SWRConfig } from "swr";
@@ -10,8 +10,14 @@ import AuthStack from "./src/routes/Stacks/AuthStack";
 import UserStack from "./src/routes/Stacks/UserStack";
 import { fetcher } from "./src/services/backend/axiosClient";
 import { LogBox } from "react-native";
-LogBox.ignoreLogs(["Warning: ..."]); // Ignore log notification by message
-LogBox.ignoreAllLogs(); //Ignore all log notifications
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+import customParseFormat from "dayjs/plugin/customParseFormat";
+// LogBox.ignoreLogs(["Warning: ..."]); // Ignore log notification by message
+// LogBox.ignoreAllLogs(); //Ignore all log notifications
+
+dayjs.extend(customParseFormat);
+dayjs.extend(utc)
 
 const theme = extendTheme({
   fontConfig: {
@@ -61,6 +67,14 @@ const theme = extendTheme({
   },
 });
 
+const myNavigationTheme = {
+  ...DefaultTheme,
+  colors: {
+    ...DefaultTheme.colors,
+    background: "white",
+  },
+}
+
 export default function App() {
   const [fontsLoaded] = useFonts({
     "Poppins-Black": require("./assets/fonts/Poppins-Black.ttf"),
@@ -96,11 +110,11 @@ export default function App() {
     >
       <Provider store={store}>
         <NativeBaseProvider theme={theme}>
-          <NavigationContainer>
-            <AuthProvider
-              authComponent={UserStack}
-              unAuthComponent={AuthStack}
-            />
+          <NavigationContainer theme={myNavigationTheme}>
+              <AuthProvider
+                authComponent={UserStack}
+                unAuthComponent={AuthStack}
+              />
           </NavigationContainer>
         </NativeBaseProvider>
       </Provider>

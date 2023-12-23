@@ -2,12 +2,14 @@ import { Text, VStack, ScrollView, View } from "native-base";
 import { SvgUri } from "react-native-svg";
 import BookedItem from "../../components/BookedItem";
 import useSWR from "swr";
+import { BaseResponseList } from "../../types/Response/BaseResponse";
+import { HistoryItem as HistoryItemType } from "../../types/Schedule";
+
+
+const PAGE_SIZE =20;
 
 const ScheduleScreen = () => {
-  const { data: ownSchedule } = useSWR<{
-    message: "Get schedules successful";
-    data: [];
-  }>("/schedule");
+  const {data: scheduleResponse} = useSWR<BaseResponseList<HistoryItemType>>(`/booking/list/student?page=1&perPage${PAGE_SIZE}0&inFuture=1&orderBy=meeting&sortBy=desc`)
 
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
@@ -39,8 +41,8 @@ const ScheduleScreen = () => {
           <Text fontWeight={700}>Latest book</Text>
         </VStack>
         <VStack px={7} space={6}>
-          {ownSchedule?.data.map((_, index) => (
-            <BookedItem key={index} />
+          {scheduleResponse?.data.rows.map((scheduleItem) => (
+            <BookedItem scheduleItem={scheduleItem} key={scheduleItem.id} />
           ))}
         </VStack>
       </VStack>

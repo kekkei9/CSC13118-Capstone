@@ -1,6 +1,7 @@
 import { createStackNavigator } from "@react-navigation/stack";
 import TutorListScreen from "../../../screens/TutorListScreen";
 import TutorDetailScreen from "../../../screens/TutorDetailScreen";
+import DialScreen from "../../../screens/DialScreen";
 
 const Stack = createStackNavigator();
 
