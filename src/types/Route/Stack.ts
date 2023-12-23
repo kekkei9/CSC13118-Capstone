@@ -1,3 +1,4 @@
+import { Course } from './../Course';
 import { DrawerNavigationProp } from "@react-navigation/drawer";
 import { CompositeNavigationProp } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
@@ -13,4 +14,17 @@ export type TutorStackParamList = {
 export type TutorsStackNavigationProp = CompositeNavigationProp<
   DrawerNavigationProp<StudentDrawerParamList, "Tutors">,
   StackNavigationProp<TutorStackParamList>
+>;
+
+// -----------------------------COURSES STACK-------------------------------------
+
+export type CourseStackParamList = {
+  "Course List": undefined;
+  "Course Detail": { courseId: string };
+  "Explore Course": { courseId: string, topicId: string };
+}
+
+export type CoursesStackNavigationProp = CompositeNavigationProp<
+  DrawerNavigationProp<StudentDrawerParamList, "Courses">,
+  StackNavigationProp<CourseStackParamList>
 >;

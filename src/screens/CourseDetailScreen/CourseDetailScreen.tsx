@@ -1,17 +1,21 @@
 import { faQuestionCircle } from "@fortawesome/free-regular-svg-icons";
 import { faBook, faUserPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import {
+  Button,
+  HStack,
+  Image,
+  Pressable,
   ScrollView,
   Text,
   VStack,
-  Image,
-  Button,
-  HStack,
-  Pressable,
 } from "native-base";
-import TopicItem from "../../components/TopicItem";
-import { useNavigation } from "@react-navigation/native";
+import useSWR from "swr";
+import { Course } from "../../types/Course";
+import { BaseResponse } from "../../types/Response/BaseResponse";
+import { CourseStackParamList, CoursesStackNavigationProp } from "../../types/Route/Stack";
+import { levelLabelMapper } from "../../constants/LevelConstant";
 
 const TOPIC_LIST = [
   "The Internet",
@@ -26,7 +30,11 @@ const TOPIC_LIST = [
 ];
 
 const CourseDetailScreen = () => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<CoursesStackNavigationProp>();
+
+  const { params } = useRoute<RouteProp<CourseStackParamList, "Course Detail">>()
+
+  const {data: courseResponse} = useSWR<BaseResponse<Course>>(`/course/${params.courseId}`)
 
   return (
     <ScrollView showsVerticalScrollIndicator={false} px={6} py={8}>
@@ -39,21 +47,21 @@ const CourseDetailScreen = () => {
         >
           <Image
             source={{
-              uri: "https://camblycurriculumicons.s3.amazonaws.com/5e0e8b212ac750e7dc9886ac?h=d41d8cd98f00b204e9800998ecf8427e",
+              uri: courseResponse?.data.imageUrl,
             }}
             h={193}
             alt="Course Image"
           />
           <VStack p={6}>
             <Text fontSize={16} fontWeight={600} mb={2}>
-              Life in the Internet Age
+              {courseResponse?.data.name}
             </Text>
             <Text fontSize={12} color={"rgb(128, 128, 128)"}>
-              Let's discuss how technology is changing the way we live
+              {courseResponse?.data.description}
             </Text>
             <Button
               mt={4}
-              onPress={() => navigation.navigate("Topic Detail" as never)}
+              onPress={() => navigation.navigate("Explore Course", {courseId: params.courseId, topicId: courseResponse?.data.topics[0].id || ""})}
             >
               Discover
             </Button>
@@ -69,10 +77,7 @@ const CourseDetailScreen = () => {
           </Text>
         </HStack>
         <Text ml={6} mt={2}>
-          Our world is rapidly changing thanks to new technology, and the
-          vocabulary needed to discuss modern life is evolving almost daily. In
-          this course you will learn the most up-to-date terminology from
-          expertly crafted lessons as well from your native-speaking tutor.
+          {courseResponse?.data.reason}
         </Text>
         <HStack space={2} alignItems={"center"} mt={4}>
           <FontAwesomeIcon icon={faQuestionCircle} color="#C75340" />
@@ -81,10 +86,7 @@ const CourseDetailScreen = () => {
           </Text>
         </HStack>
         <Text ml={6} mt={2}>
-          You will learn vocabulary related to timely topics like remote work,
-          artificial intelligence, online privacy, and more. In addition to
-          discussion questions, you will practice intermediate level speaking
-          tasks such as using data to describe trends.
+          {courseResponse?.data.purpose}
         </Text>
         <Text fontSize={22} fontWeight={600} mt={8} ml={6}>
           Experience Level
@@ -92,7 +94,7 @@ const CourseDetailScreen = () => {
         <HStack space={2} alignItems={"center"} mt={4}>
           <FontAwesomeIcon icon={faUserPlus} color="#4464B8" />
           <Text fontSize={16} fontWeight={500}>
-            Intermediate
+            {levelLabelMapper[courseResponse?.data.level as keyof typeof levelLabelMapper]}
           </Text>
         </HStack>
         <Text fontSize={22} fontWeight={600} mt={8} ml={6}>
@@ -101,25 +103,25 @@ const CourseDetailScreen = () => {
         <HStack space={2} alignItems={"center"} mt={4}>
           <FontAwesomeIcon icon={faBook} color="#4464B8" />
           <Text fontSize={16} fontWeight={500}>
-            9 topics
+            {courseResponse?.data.topics.length} topics
           </Text>
         </HStack>
         <Text fontSize={22} fontWeight={600} mt={8} ml={6}>
           List Topics
         </Text>
         <VStack space={3.5} mt={4}>
-          {TOPIC_LIST.map((topic, index) => (
+          {courseResponse?.data.topics.map((topic, index) => (
             <Pressable
               p={4}
               backgroundColor={"rgba(232, 232, 232, 0.106)"}
               borderColor={"rgba(215, 215, 215, 0.44)"}
               borderWidth={2}
-              onPress={() => navigation.navigate("Topic Detail" as never)}
+              onPress={() => navigation.navigate("Explore Course", {courseId: params.courseId, topicId: topic.id})}
               rounded={"sm"}
               key={index}
             >
               <Text fontSize={16} fontWeight={500}>
-                {index + 1}. {topic}
+                {index + 1}. {topic.name}
               </Text>
             </Pressable>
           ))}
@@ -127,10 +129,13 @@ const CourseDetailScreen = () => {
         <Text fontSize={22} fontWeight={600} mt={8} ml={6}>
           Suggested Tutors
         </Text>
-        <HStack mt={4} ml={3}>
-          <Text>Keegan </Text>
-          <Text color="#1890ff">More Info</Text>
-        </HStack>
+        <VStack mt={4} ml={3}>
+          {courseResponse?.data.users?.map((user, index) => 
+          (<HStack>
+            <Text>{user.name} </Text>
+            {/* <Text color="#1890ff">More Info</Text> */}
+          </HStack>))}
+        </VStack>
       </VStack>
     </ScrollView>
   );

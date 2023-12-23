@@ -18,6 +18,9 @@ import { Animated, Dimensions, Pressable, StatusBar } from "react-native";
 import { SceneMap, TabView } from "react-native-tab-view";
 import { useState } from "react";
 import useSWR from "swr";
+import { BaseResponse, BaseResponseList } from "../../types/Response/BaseResponse";
+import { Course } from "../../types/Course";
+import { CoursesStackNavigationProp } from "../../types/Route/Stack";
 
 const FirstRoute = () => (
   <VStack flex={1} my="4">
@@ -70,7 +73,7 @@ const CoursesScreen = () => {
       title: "Interactive E-book",
     },
   ]);
-  const navigation = useNavigation();
+  const navigation = useNavigation<CoursesStackNavigationProp>();
 
   const renderTabBar = (props: any) => {
     const inputRange = props.navigationState.routes.map(
@@ -103,7 +106,6 @@ const CoursesScreen = () => {
             >
               <Pressable
                 onPress={() => {
-                  console.log(i);
                   setIndex(i);
                 }}
               >
@@ -122,7 +124,7 @@ const CoursesScreen = () => {
     );
   };
 
-  const { data: coursesList } = useSWR<BaseResponse<>>(
+  const { data: coursesList } = useSWR<BaseResponseList<Course>>(
     "/course?page=1&size=100"
   );
 
@@ -177,9 +179,9 @@ const CoursesScreen = () => {
             }}
           />
         </Flex>
-        <VStack pt={8} space={16}>
-          {/* Categories -> Courses */}
-          {coursesList.map((_, index) => (
+        {/* <VStack pt={8} space={16}>
+          Categories -> Courses
+          {coursesList?.data.rows.map((_, index)  => (
             <VStack justifyContent={"center"} key={index} space={8}>
               <Text fontSize={28} fontWeight={500}>
                 English For Traveling
@@ -192,6 +194,14 @@ const CoursesScreen = () => {
               ))}
             </VStack>
           ))}
+        </VStack> */}
+        <VStack pt={8} space={8}>
+          {coursesList?.data.rows.map((course, index) => 
+           (<CourseItem
+              course={course} 
+              onClick={() => navigation.navigate("Course Detail", {courseId: course.id})}
+              key={course.id}
+             />))}
         </VStack>
       </VStack>
     </ScrollView>

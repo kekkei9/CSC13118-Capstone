@@ -9,9 +9,9 @@ import store from "./src/redux/store";
 import AuthStack from "./src/routes/Stacks/AuthStack";
 import UserStack from "./src/routes/Stacks/UserStack";
 import { fetcher } from "./src/services/backend/axiosClient";
-// import { LogBox } from "react-native";
-// LogBox.ignoreLogs(["Warning: ..."]); // Ignore log notification by message
-// LogBox.ignoreAllLogs(); //Ignore all log notifications
+import { LogBox } from "react-native";
+LogBox.ignoreLogs(["Warning: ..."]); // Ignore log notification by message
+LogBox.ignoreAllLogs(); //Ignore all log notifications
 
 const theme = extendTheme({
   fontConfig: {

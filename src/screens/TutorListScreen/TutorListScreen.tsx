@@ -207,8 +207,8 @@ const TutorListScreen = () => {
           </Text>
           {isLoading ? (
             <>
-              {[...Array(3)].map((_) => (
-                <Center w="100%">
+              {[...Array(3)].map((_, index) => (
+                <Center w="100%" key={index}>
                   <VStack
                     w="90%"
                     maxW="400"
