@@ -38,7 +38,7 @@ const HistoryScreen = () => {
         </VStack>
         <VStack px={7} space={6} mt={6}>
           {historyResponse?.data.rows.map((historyItem, index) => (
-            <HistoryItem historyItem={historyItem} key={index} />
+            <HistoryItem historyItem={historyItem} key={historyItem.id} />
           ))}
         </VStack>
       </VStack>

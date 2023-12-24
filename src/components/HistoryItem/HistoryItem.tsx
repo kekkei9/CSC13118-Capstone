@@ -76,12 +76,13 @@ const HistoryItem = ({historyItem}: HistoryItemProps) => {
         >
           Tutor haven't review yet
         </Text>
-        {historyItem.feedbacks.map(({rating}) => (<Flex
+        {historyItem.feedbacks.map(({rating, id}) => (<Flex
           wrap="wrap"
           flexDirection={"row"}
           justifyContent={"space-between"}
           px={4}
           py={3}
+          key={id}
         >
           <HStack alignItems={"center"}>
             <Text mr={2}>Rating: </Text>
