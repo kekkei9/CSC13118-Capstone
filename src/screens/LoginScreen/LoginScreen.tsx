@@ -35,11 +35,12 @@ const LoginScreen = () => {
   const navigation = useNavigation();
 
   const onSubmit = async (values: FormValues) => {
-    // TODO: Remove this
-    const values1 = { email: "phhai@ymail.com", password: "123456" };
+    if (__DEV__) {
+      values = { email: "phhai@ymail.com", password: "123456" };
+    }
     try {
       const loginResult = await dispatch(
-        loginWithEmailPassword(values1)
+        loginWithEmailPassword(values)
       ).unwrap();
     } catch (error) {
       toast.show({
