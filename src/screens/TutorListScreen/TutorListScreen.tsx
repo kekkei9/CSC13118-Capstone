@@ -1,4 +1,5 @@
 import { useNavigation } from "@react-navigation/native";
+import dayjs from "dayjs";
 import _ from "lodash";
 import {
   Button,
@@ -7,6 +8,7 @@ import {
   Container,
   Flex,
   HStack,
+  Image,
   Input,
   ScrollView,
   Skeleton,
@@ -25,12 +27,11 @@ import {
   searchTutor,
 } from "../../services/backend/TutorController";
 import { axiosClient } from "../../services/backend/axiosClient";
-import { HistoryItem as HistoryItemType } from "../../types/Schedule";
+import { BaseResponseList } from "../../types/Response/BaseResponse";
 import { TutorListResponse } from "../../types/Response/TutorResponse";
 import { TutorsStackNavigationProp } from "../../types/Route/Stack";
+import { HistoryItem as HistoryItemType } from "../../types/Schedule";
 import { Tutor } from "../../types/Tutor";
-import { BaseResponseList } from "../../types/Response/BaseResponse";
-import dayjs from "dayjs";
 
 const PAGE_SIZE = 12;
 
@@ -77,19 +78,11 @@ const TutorListScreen = () => {
     }));
   }, [selectedGroups]);
 
-  const { data: tutorsResponse, isLoading } = useSWR<Tutor[]>(
+  const { data: tutorsResponse, isLoading, mutate } = useSWR<{ count: number; rows: Tutor[] }>(
     `tutorList?search=${search}&tutorFilters=${Object.values(
       tutorFilter || {}
     ).join("")}`,
-    async () => {
-      if (!tutorFilter)
-        return (
-          await axiosClient.get<TutorListResponse>(
-            `tutor/more?perPage=${PAGE_SIZE}&page=1`
-          )
-        ).data.tutors.rows;
-      return (await searchTutor(tutorFilter, search, 1, PAGE_SIZE)).data.rows;
-    }
+    () => searchTutor(tutorFilter, search, 1, PAGE_SIZE).then((res) => res.data)
   );
 
   //get latest schedule
@@ -98,7 +91,9 @@ const TutorListScreen = () => {
   const latestSchedule = scheduleResponse?.data.rows[0];
 
   const handleFavorite = async (tutorId: string) => {
-    await addTutorToFavorite(tutorId);
+    const result = await addTutorToFavorite(tutorId);
+    if (result.status !== 200) return;
+    mutate();
     toast.show({
       title: "Successfully toggle favorite",
     });
@@ -265,7 +260,7 @@ const TutorListScreen = () => {
             </>
           ) : null}
 
-          {tutorsResponse?.map((tutor) => (
+          {tutorsResponse?.rows.length ? tutorsResponse?.rows.map((tutor) => (
             <TutorItem
               onPress={() =>
                 navigation.navigate("Tutor Detail", { tutorId: tutor.id })
@@ -274,7 +269,18 @@ const TutorListScreen = () => {
               onPressFavorite={() => handleFavorite(tutor.id)}
               key={tutor.id}
             />
-          ))}
+          )): <Center>
+                <Image
+                  width="184"
+                  height="120"
+                  source={{
+                    uri: "https://user-images.githubusercontent.com/507615/54591670-ac0a0180-4a65-11e9-846c-e55ffce0fe7b.png"
+                  }}
+                  alt="No tutor found"
+                  style={{ objectFit: "contain" }}
+                />
+                <Text>Sorry we can't find any tutor with this keywords</Text>
+            </Center>}
         </VStack>
       </VStack>
     </ScrollView>

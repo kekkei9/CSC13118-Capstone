@@ -1,6 +1,7 @@
 export interface  BaseResponse<T> {
   message: string;
   data: T;
+  statusCode?: number;
 }
 
 export interface BaseResponseList<T> {

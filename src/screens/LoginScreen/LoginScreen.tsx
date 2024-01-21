@@ -5,6 +5,7 @@ import {
   Container,
   Flex,
   HStack,
+  Icon,
   Image,
   Input,
   Pressable,
@@ -17,6 +18,9 @@ import { useAppDispatch } from "../../redux/store";
 import { Controller, useForm } from "react-hook-form";
 import { loginWithEmailPassword } from "../../redux/authentication/authentication.action";
 import { useToast } from "native-base";
+import React, { useEffect, useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { faEye, faEyeSlash } from "@fortawesome/free-regular-svg-icons";
 
 type FormValues = {
   email: string;
@@ -29,15 +33,23 @@ const LoginScreen = () => {
     handleSubmit,
     control,
     formState: { errors },
+    setValue,
   } = useForm<FormValues>();
+
+  const [show, setShow] = useState(false);
 
   const dispatch = useAppDispatch();
   const navigation = useNavigation();
 
-  const onSubmit = async (values: FormValues) => {
+  useEffect(() => {
+    // Auto fill form for development
     if (__DEV__) {
-      values = { email: "phhai@ymail.com", password: "123456" };
+      setValue("email", "phhai@ymail.com");
+      setValue("password", "123456");
     }
+  }, []);
+
+  const onSubmit = async (values: FormValues) => {
     try {
       const loginResult = await dispatch(
         loginWithEmailPassword(values)
@@ -93,11 +105,22 @@ const LoginScreen = () => {
                     value={value}
                     w={"full"}
                     isInvalid={"email" in errors}
+                    size="md" 
                   />
                 )}
                 name="email"
-                // rules={{ required: "Email is required", minLength: 6 }}
+                rules={{ 
+                  required: "Email is required", 
+                  minLength: 0,
+                  pattern: {
+                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                    message: "Invalid email address"
+                  }
+                }}
               />
+              { errors.email?.message && 
+                <Text mt={2} color="red.400">{errors.email?.message}</Text>
+              }
             </Flex>
             <Flex mb={"6"}>
               <Text color="#A4B0BE">PASSWORD</Text>
@@ -106,15 +129,23 @@ const LoginScreen = () => {
                 render={({ field: { onChange, onBlur, value } }) => (
                   <Input
                     onBlur={onBlur}
-                    type="password"
                     onChangeText={(val) => onChange(val)}
                     value={value}
                     isInvalid={"password" in errors}
+                    type={show ? "text" : "password"}
+                    size="md" 
+                    InputRightElement={
+                      <Pressable onPress={() => setShow(!show)} mr={3}>
+                        <FontAwesomeIcon icon={show ? faEye : faEyeSlash} color="#808080" size={22} />
+                      </Pressable>}
                   />
                 )}
                 name="password"
-                // rules={{ required: "Password is required", minLength: 6 }}
+                rules={{ required: "Password is required", minLength: 0 }}
               />
+              { errors.password?.message &&
+                <Text mt={2} color="red.400">{errors.password?.message}</Text>
+              }
             </Flex>
             <Pressable
               onPress={() => navigation.navigate("ForgotPassword" as never)}

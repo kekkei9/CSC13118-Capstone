@@ -13,9 +13,14 @@ type BookingTableProps = {
 
 const BookingTable = ({tutorId}: BookingTableProps) => {
     const user = useAppSelector((state) => state.authentication.data);
-
+    
+    const currentDate = dayjs().hour(0).minute(0).second(0).millisecond(0);
     const [tutorSchedule, setTutorSchedule] = useState<TutorSchedule[]>([]);
-    const [displayDates, setDisplayDates] = useState<Dayjs[]>([]);
+    const [displayDates, setDisplayDates] = useState<Dayjs[]>([
+        currentDate,
+        currentDate.add(1, "day"),
+        currentDate.add(2, "day")
+    ]);
     const [displayMatrix, setDisplayMatrix] = useState<Record<string, Record<string, TutorSchedule>> | undefined>();
     const [isLoaded, setIsLoaded] = useState<boolean>(false);
 
@@ -25,15 +30,10 @@ const BookingTable = ({tutorId}: BookingTableProps) => {
             setTutorSchedule(response.data);
         }
         fetchSchedule();
-        const currentDate = dayjs().hour(0).minute(0).second(0).millisecond(0);
-        setDisplayDates([
-            currentDate,
-            currentDate.add(1, "day"),
-            currentDate.add(2, "day")
-        ])
      }, [tutorId])
 
      useEffect(() => {
+        if (!tutorSchedule.length) return;
         setIsLoaded(false);
         let matrix: Record<string, Record<string, TutorSchedule>> = displayMatrix || {};
         for (const displayDate of displayDates) {
@@ -59,8 +59,8 @@ const BookingTable = ({tutorId}: BookingTableProps) => {
 
     return ( <VStack>
         <HStack mb={3} space={2}>
-            <Button onPress={() => handleChangeDateScope("DECR")}>Prev</Button>
-            <Button onPress={() => handleChangeDateScope("INCR")}>Next</Button>
+            <Button onPress={() => handleChangeDateScope("DECR")} disabled={!isLoaded}>Prev</Button>
+            <Button onPress={() => handleChangeDateScope("INCR")} disabled={!isLoaded}>Next</Button>
         </HStack>
         <Row>
             <Column flex={1} borderWidth={1} borderColor={"#f5f5f5"} bg={"rgb(249,249,249)"} alignItems={"center"} justifyContent={"center"} px={4}

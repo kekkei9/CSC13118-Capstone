@@ -1,4 +1,5 @@
 import { AuthResponse } from "../../../types/Response/AuthResponse";
+import { BaseResponse } from "../../../types/Response/BaseResponse";
 import { axiosClient } from "../axiosClient";
 
 // ---------------------------SIGN UP---------------------------
@@ -37,4 +38,4 @@ export const resendPhoneOTP = (phone: string) =>
 // ---------------------------FORGOT PASSWORD---------------------------
 
 export const sendForgotPasswordEmail = (email: string) =>
-  axiosClient.post("/user/forgotPassword", { email });
+  axiosClient.post<BaseResponse<{}>>("/user/forgotPassword", { email });
