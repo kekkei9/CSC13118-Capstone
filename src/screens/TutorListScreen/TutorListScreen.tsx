@@ -32,6 +32,7 @@ import { TutorListResponse } from "../../types/Response/TutorResponse";
 import { TutorsStackNavigationProp } from "../../types/Route/Stack";
 import { HistoryItem as HistoryItemType } from "../../types/Schedule";
 import { Tutor } from "../../types/Tutor";
+import Pagination from "../../components/Pagination";
 
 const PAGE_SIZE = 12;
 
@@ -55,6 +56,7 @@ const TutorListScreen = () => {
   const [tutorFilter, setTutorFilter] = useState<TutorFilter>(initTutorFilter);
   const [search, setSearch] = useState<string>("");
   const [selectedGroups, setSelectedGroups] = useState<string[]>([]);
+  const [currentPage, setCurrentPage] = useState<number>(1);
 
   useEffect(() => {
     if (!selectedGroups) return;
@@ -79,10 +81,10 @@ const TutorListScreen = () => {
   }, [selectedGroups]);
 
   const { data: tutorsResponse, isLoading, mutate } = useSWR<{ count: number; rows: Tutor[] }>(
-    `tutorList?search=${search}&tutorFilters=${Object.values(
+    `tutorList?search=${search}&page=${currentPage}&tutorFilters=${Object.values(
       tutorFilter || {}
     ).join("")}`,
-    () => searchTutor(tutorFilter, search, 1, PAGE_SIZE).then((res) => res.data)
+    () => searchTutor(tutorFilter, search, currentPage, PAGE_SIZE).then((res) => res.data)
   );
 
   //get latest schedule
@@ -260,7 +262,7 @@ const TutorListScreen = () => {
             </>
           ) : null}
 
-          {tutorsResponse?.rows.length ? tutorsResponse?.rows.map((tutor) => (
+          {tutorsResponse?.rows.map((tutor) => (
             <TutorItem
               onPress={() =>
                 navigation.navigate("Tutor Detail", { tutorId: tutor.id })
@@ -269,7 +271,15 @@ const TutorListScreen = () => {
               onPressFavorite={() => handleFavorite(tutor.id)}
               key={tutor.id}
             />
-          )): <Center>
+           ))}
+          <Pagination 
+            maxBulletNumber={5} 
+            total={(tutorsResponse?.count || 0) / PAGE_SIZE} 
+            value={currentPage} 
+            onChange={setCurrentPage}
+          />
+          {tutorsResponse?.rows.length === 0 && 
+              <Center>
                 <Image
                   width="184"
                   height="120"
