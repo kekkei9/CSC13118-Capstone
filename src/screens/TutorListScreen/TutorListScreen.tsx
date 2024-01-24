@@ -18,6 +18,7 @@ import {
 } from "native-base";
 import { useEffect, useRef, useState } from "react";
 import useSWR from "swr";
+import Pagination from "../../components/Pagination";
 import Tag from "../../components/Tag/Tag";
 import TutorItem from "../../components/TutorItem/TutorItem";
 import {
@@ -26,13 +27,10 @@ import {
   initTutorFilter,
   searchTutor,
 } from "../../services/backend/TutorController";
-import { axiosClient } from "../../services/backend/axiosClient";
 import { BaseResponseList } from "../../types/Response/BaseResponse";
-import { TutorListResponse } from "../../types/Response/TutorResponse";
 import { TutorsStackNavigationProp } from "../../types/Route/Stack";
 import { HistoryItem as HistoryItemType } from "../../types/Schedule";
 import { Tutor } from "../../types/Tutor";
-import Pagination from "../../components/Pagination";
 
 const PAGE_SIZE = 12;
 

@@ -30,7 +30,11 @@ const ExploreCourseScreen = () => {
 
   return (
     <ScrollView>
-      <VStack flex={1} px={2.5} py={9} backgroundColor={"#fff"}>
+      <VStack 
+        flex={1} px={2.5} py={9} 
+        _light={{ backgroundColor: "white" }}
+        _dark={{ backgroundColor: "gray.700" }}
+      >
         <Image
           source={{
             uri: courseResponse?.data.imageUrl,
@@ -52,9 +56,12 @@ const ExploreCourseScreen = () => {
             <Pressable
               py={2.5}
               px={5}
-              backgroundColor={
+              _light={{backgroundColor:
                 currentTopicId === topic.id ? "rgba(0, 0, 0, 0.08)" : "#fff"
-              }
+              }}
+              _dark={{backgroundColor: 
+                currentTopicId === topic.id ? "rgba(255, 255, 255, 0.08)" : "#000"
+              }}
               onPress={() => setCurrentTopicId(topic.id)}
               rounded={"2xl"}
               key={topic.id}

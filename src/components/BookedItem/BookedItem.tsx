@@ -20,17 +20,22 @@ const BookedItem = ({scheduleItem}: BookeditemType) => {
 
   return (
     <VStack
-      backgroundColor={"rgb(241, 241, 241)"}
-      background={
-        "linear-gradient(to right, rgb(234, 235, 239), rgb(236, 236, 239), rgb(238, 238, 240), rgb(239, 239, 240), rgb(241, 241, 241));"
-      }
+      _light={{backgroundColor: "rgb(241, 241, 241)"}}
+      _dark={{backgroundColor: "rgb(20, 20, 20)"}}
+      // background={
+      //   "linear-gradient(to right, rgb(234, 235, 239), rgb(236, 236, 239), rgb(238, 238, 240), rgb(239, 239, 240), rgb(241, 241, 241));"
+      // }
       p={4}
     >
       <Text fontSize={24} fontWeight={700}>
         {dayjs(startTimestamp).format("ddd, DD MMM YY")}
       </Text>
       <Text>1 lesson</Text>
-      <HStack backgroundColor={"white"} space={3} mt={6} p={3}>
+      <HStack 
+        _light={{backgroundColor: "white"}}
+        _dark={{backgroundColor: "gray.700"}}
+        space={3} mt={6} p={3}
+        >
         <Image
           source={{
             uri: tutorInfo.avatar,
@@ -62,7 +67,11 @@ const BookedItem = ({scheduleItem}: BookeditemType) => {
           </HStack>
         </VStack>
       </HStack>
-      <VStack backgroundColor={"white"} mt={6} px={5} pt={3} pb={1.5}>
+      <VStack
+        _light={{backgroundColor: "white"}}
+        _dark={{backgroundColor: "gray.700"}} 
+        mt={6} px={5} pt={3} pb={1.5}
+      >
         <HStack alignItems={"center"} mb={4}>
           <Text flex={1} fontSize={20}>
             {startTime} - {endTime}
@@ -73,7 +82,8 @@ const BookedItem = ({scheduleItem}: BookeditemType) => {
           <HStack
             alignItems={"center"}
             justifyContent={"space-between"}
-            backgroundColor={"#fafafa"}
+            _light={{backgroundColor: "#fafafa"}}
+            _dark={{backgroundColor: "#303030"}}
             px={4}
             py={3}
           >

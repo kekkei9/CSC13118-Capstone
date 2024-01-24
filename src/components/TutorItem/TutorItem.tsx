@@ -45,7 +45,8 @@ const TutorItem = ({
     <VStack
       p={5}
       shadow="2"
-      backgroundColor={"#fff"}
+      _light={{ backgroundColor: "white" }}
+      _dark={{ backgroundColor: "gray.700" }}
       rounded={"3xl"}
       w={"full"}
     >

@@ -42,7 +42,8 @@ const CourseDetailScreen = () => {
         <VStack
           overflow={"hidden"}
           shadow={3}
-          backgroundColor={"white"}
+          _light={{ backgroundColor: "white" }}
+          _dark={{ backgroundColor: "gray.700" }}
           rounded={"2xl"}
         >
           <Image

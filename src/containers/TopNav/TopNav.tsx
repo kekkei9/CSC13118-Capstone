@@ -27,7 +27,8 @@ const TopNav = () => {
         shadowOffset: { height: 2, width: 2 },
       }}
       shadow={"2"}
-      backgroundColor={"#fff"}
+      _light={{ backgroundColor: "white" }}
+      _dark={{ backgroundColor: "gray.700" }}
       paddingTop={insets.top + 13}
     >
       <SvgUri
@@ -39,7 +40,8 @@ const TopNav = () => {
         <ChooseLanguage />
         {!!user ? (
           <Pressable
-            backgroundColor={"rgb(228, 230, 235)"}
+            _light={{backgroundColor: "rgb(228, 230, 235)"}}
+            _dark={{backgroundColor: "rgb(100, 100, 100)"}}
             rounded={"full"}
             width={38}
             height={38}

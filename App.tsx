@@ -1,6 +1,6 @@
-import { DefaultTheme, NavigationContainer } from "@react-navigation/native";
+import { DarkTheme, DefaultTheme, NavigationContainer } from "@react-navigation/native";
 import { useFonts } from "expo-font";
-import { Container, NativeBaseProvider, View, extendTheme } from "native-base";
+import { Container, NativeBaseProvider, View, extendTheme, useColorMode } from "native-base";
 import "react-native-gesture-handler";
 import { Provider } from "react-redux";
 import { SWRConfig } from "swr";
@@ -67,13 +67,28 @@ const theme = extendTheme({
   },
 });
 
-const myNavigationTheme = {
+const LightTheme = {
   ...DefaultTheme,
   colors: {
     ...DefaultTheme.colors,
     background: "white",
   },
 }
+
+const NavigationProvider = () => { 
+  const {
+    colorMode,
+  } = useColorMode();
+
+  return (
+  <NavigationContainer theme={colorMode === "light" ? LightTheme : DarkTheme}>
+    <AuthProvider
+      authComponent={UserStack}
+      unAuthComponent={AuthStack}
+    />
+  </NavigationContainer>)
+}
+
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -110,12 +125,7 @@ export default function App() {
     >
       <Provider store={store}>
         <NativeBaseProvider theme={theme}>
-          <NavigationContainer theme={myNavigationTheme}>
-              <AuthProvider
-                authComponent={UserStack}
-                unAuthComponent={AuthStack}
-              />
-          </NavigationContainer>
+          <NavigationProvider />
         </NativeBaseProvider>
       </Provider>
     </SWRConfig>

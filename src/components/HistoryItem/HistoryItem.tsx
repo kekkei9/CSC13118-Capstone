@@ -18,17 +18,22 @@ const HistoryItem = ({historyItem}: HistoryItemProps) => {
 
   return (
     <VStack
-      backgroundColor={"rgb(241, 241, 241)"}
-      background={
-        "linear-gradient(to right, rgb(234, 235, 239), rgb(236, 236, 239), rgb(238, 238, 240), rgb(239, 239, 240), rgb(241, 241, 241));"
-      }
+      _light={{backgroundColor: "rgb(241, 241, 241)"}}
+      _dark={{backgroundColor: "rgb(20, 20, 20)"}}
+      // background={
+      //   "linear-gradient(to right, rgb(234, 235, 239), rgb(236, 236, 239), rgb(238, 238, 240), rgb(239, 239, 240), rgb(241, 241, 241));"
+      // }
       p={4}
     >
       <Text fontSize={24} fontWeight={700}>
         {dayjs(endTimestamp).format("ddd, DD MMM YY")}
       </Text>
       <Text>{timeDiff(dayjs(endTimestamp).toISOString())}</Text>
-      <HStack backgroundColor={"white"} space={3} mt={6} p={3}>
+      <HStack
+        _light={{backgroundColor: "white"}}
+        _dark={{backgroundColor: "gray.700"}}
+        space={3} mt={6} p={3}
+      >
         <Image
           source={{
             uri: tutorInfo.avatar,
@@ -60,10 +65,17 @@ const HistoryItem = ({historyItem}: HistoryItemProps) => {
           </HStack>
         </VStack>
       </HStack>
-      <Text fontSize={20} py={3} px={5} bg={"white"} w={"full"} mt={8}>
+      <Text fontSize={20} py={3} px={5} w={"full"} mt={8}
+        _light={{backgroundColor: "white"}}
+        _dark={{backgroundColor: "gray.700"}}
+      >
         Lesson Time: {startTime} - {endTime}
       </Text>
-      <VStack backgroundColor={"white"} mt={6}>
+      <VStack
+        _light={{backgroundColor: "white"}}
+        _dark={{backgroundColor: "gray.700"}}
+        mt={6}
+      >
         <Text px={4} py={3}>
           {historyItem.studentRequest || "No request for lesson"}
         </Text>

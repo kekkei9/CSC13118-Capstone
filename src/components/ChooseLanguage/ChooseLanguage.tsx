@@ -16,7 +16,8 @@ const ChooseLanguage = () => {
   return (
     <Container>
       <Button
-        backgroundColor={"rgb(228, 230, 235)"}
+        _light={{backgroundColor: "rgb(228, 230, 235)"}}
+        _dark={{backgroundColor: "rgb(100, 100, 100)"}}
         rounded={"full"}
         width={38}
         height={38}
@@ -48,7 +49,8 @@ const ChooseLanguage = () => {
               onTouchStart={() => onChooseLanguage(locale)}
               shadow={"10"}
               key={locale}
-              backgroundColor={"#fff"}
+              _light={{ backgroundColor: "white" }}
+              _dark={{ backgroundColor: "gray.700" }}
             >
               <SvgUri uri={icon} width={22} height={22} />
               <Text marginLeft={2}>{name}</Text>

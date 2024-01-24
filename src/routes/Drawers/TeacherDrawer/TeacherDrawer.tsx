@@ -5,6 +5,7 @@ import ScheduleScreen from "../../../screens/ScheduleScreen";
 import CoursesStack from "../../Stacks/CoursesStack";
 import TutorsStack from "../../Stacks/TutorsStack";
 import CustomDrawerContent from "../CustomDrawerContent";
+import SettingScreen from "../../../screens/SettingScreen";
 
 const Drawer = createDrawerNavigator();
 
@@ -21,6 +22,7 @@ const TeacherDrawer = () => {
     >
       <Drawer.Screen name="Schedule" component={ScheduleScreen} />
       <Drawer.Screen name="Courses" component={CoursesStack} />
+      <Drawer.Screen name="Settings" component={SettingScreen} />
     </Drawer.Navigator>
   );
 };

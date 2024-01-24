@@ -14,7 +14,8 @@ const CourseItem = ({ course, onClick }: CourseItemProps) => {
       rounded={"2xl"}
       overflow={"hidden"}
       shadow={3}
-      backgroundColor={"white"}
+      _light={{ backgroundColor: "white" }}
+      _dark={{ backgroundColor: "gray.700" }}
     >
       <Image
         source={{
