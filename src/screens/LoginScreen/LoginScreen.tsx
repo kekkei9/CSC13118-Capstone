@@ -21,6 +21,8 @@ import { useToast } from "native-base";
 import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-regular-svg-icons";
+import { useI18nContext } from "../../i18n/i18n-react";
+import _ from "lodash";
 
 type FormValues = {
   email: string;
@@ -29,6 +31,8 @@ type FormValues = {
 
 const LoginScreen = () => {
   const toast = useToast();
+  const {LL} = useI18nContext();
+  
   const {
     handleSubmit,
     control,
@@ -79,7 +83,7 @@ const LoginScreen = () => {
             color={"rgb(0, 113, 240)"}
             fontWeight={600}
           >
-            Say hello to your English tutors
+            {LL.login.sayHello()}
           </Text>
           <Text
             textAlign={"center"}
@@ -87,13 +91,12 @@ const LoginScreen = () => {
             fontWeight={500}
             fontSize={"16px"}
           >
-            Become fluent faster through one on one video chat lessons tailored
-            to your goals.
+            {LL.login.becomeFluentFaster()}
           </Text>
           <VStack w="full">
             <Flex mb={4} w={"full"}>
               <Text color="#A4B0BE" mb={2}>
-                EMAIL
+                {LL.login.email().toUpperCase()}
               </Text>
               <Controller
                 control={control}
@@ -123,7 +126,7 @@ const LoginScreen = () => {
               }
             </Flex>
             <Flex mb={"6"}>
-              <Text color="#A4B0BE">PASSWORD</Text>
+              <Text color="#A4B0BE">{LL.login.password().toUpperCase()}</Text>
               <Controller
                 control={control}
                 render={({ field: { onChange, onBlur, value } }) => (
@@ -151,16 +154,16 @@ const LoginScreen = () => {
               onPress={() => navigation.navigate("ForgotPassword" as never)}
             >
               <Text mb={2.5} color="#286AD2">
-                Forgot password?
+                {LL.login.forgotPassword()}
               </Text>
             </Pressable>
             <Button mb={6} onPress={handleSubmit(onSubmit)} py={2.5}>
               <Text fontSize={20} color="white" fontWeight={500}>
-                LOG IN
+                {LL.login.login().toUpperCase()}
               </Text>
             </Button>
             <Center>
-              <Text fontSize={16}>Or continue with</Text>
+              <Text fontSize={16}>{LL.login.orContinueWith()}</Text>
               <HStack space={6} mt={6}>
                 <SvgUri
                   width={40}
@@ -196,12 +199,12 @@ const LoginScreen = () => {
                 </Container>
               </HStack>
               <HStack mt={6}>
-                <Text>Not a member yet? </Text>
+                <Text>{LL.login.notAMemberYet()} </Text>
                 <Text
                   color={"#1890ff"}
                   onPress={() => navigation.navigate("SignUp" as never)}
                 >
-                  Sign up
+                  {LL.login.signUp()}
                 </Text>
               </HStack>
             </Center>

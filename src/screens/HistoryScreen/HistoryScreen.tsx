@@ -4,10 +4,12 @@ import HistoryItem from "../../components/HistoryItem";
 import useSWR from "swr";
 import { BaseResponseList } from "../../types/Response/BaseResponse";
 import { HistoryItem as HistoryItemType } from "../../types/Schedule";
+import { useI18nContext } from "../../i18n/i18n-react";
 
 const PAGE_SIZE = 20;
 
 const HistoryScreen = () => {
+  const {LL} = useI18nContext();
 
   const {data: historyResponse} = useSWR<BaseResponseList<HistoryItemType>>(`/booking/list/student?page=1&perPage${PAGE_SIZE}0&inFuture=0&orderBy=meeting&sortBy=desc`)
 
@@ -21,7 +23,7 @@ const HistoryScreen = () => {
             height={120}
           />
           <Text fontWeight={600} fontSize={30} mb={3}>
-            History
+            {LL.history.history()}
           </Text>
           <VStack
             pl={2}
@@ -29,15 +31,15 @@ const HistoryScreen = () => {
             borderLeftWidth={4}
           >
             <Text fontSize={16}>
-              The following is a list of lessons you have attended
+              {LL.history.theFollowingIsAList()}
             </Text>
             <Text fontSize={16}>
-              You can review the details of the lessons you have attended
+              {LL.history.youCanReview()}
             </Text>
           </VStack>
         </VStack>
         <VStack px={7} space={6} mt={6}>
-          {historyResponse?.data.rows.map((historyItem, index) => (
+          {historyResponse?.data.rows.map((historyItem) => (
             <HistoryItem historyItem={historyItem} key={historyItem.id} />
           ))}
         </VStack>

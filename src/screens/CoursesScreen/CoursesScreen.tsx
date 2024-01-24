@@ -21,6 +21,7 @@ import useSWR from "swr";
 import { BaseResponse, BaseResponseList } from "../../types/Response/BaseResponse";
 import { Course } from "../../types/Course";
 import { CoursesStackNavigationProp } from "../../types/Route/Stack";
+import { useI18nContext } from "../../i18n/i18n-react";
 
 const FirstRoute = () => (
   <VStack flex={1} my="4">
@@ -58,6 +59,8 @@ const renderScene = SceneMap({
 });
 
 const CoursesScreen = () => {
+  const {LL} = useI18nContext();
+
   const [index, setIndex] = useState<number>(0);
   const [routes] = useState<{ key: string; title: string }[]>([
     {
@@ -139,18 +142,13 @@ const CoursesScreen = () => {
           />
           <VStack flex={1}>
             <Text fontSize={24} fontWeight={600}>
-              Discover
-            </Text>
-            <Text fontSize={24} fontWeight={600}>
-              Courses
+              {LL.courses.discoverCourses()}
             </Text>
             <Input placeholder="Course" w={"full"} />
           </VStack>
         </HStack>
         <Text my={4}>
-          LiveTutor has built the most quality, methodical and scientific
-          courses in the fields of life for those who are in need of improving
-          their knowledge of the fields.
+          {LL.courses.liveTutorHasBuilt()}
         </Text>
         <Flex
           w={"full"}

@@ -18,6 +18,7 @@ import { signUpByEmailPassword } from "../../services/backend/AuthController";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { useState } from "react";
 import { faEye, faEyeSlash } from "@fortawesome/free-regular-svg-icons";
+import { useI18nContext } from "../../i18n/i18n-react";
 
 type FormValues = {
   email: string;
@@ -32,6 +33,7 @@ const SignUpScreen = () => {
   } = useForm<FormValues>();
 
   const navigation = useNavigation();
+  const {LL} = useI18nContext();
   const [show, setShow] = useState(false);
 
   const onSubmit = async (values: FormValues) => {
@@ -59,7 +61,7 @@ const SignUpScreen = () => {
             color={"rgb(0, 113, 240)"}
             fontWeight={600}
           >
-            Start learning with LetTutor
+            {LL.signUp.startLearning()}
           </Text>
           <Text
             textAlign={"center"}
@@ -67,13 +69,12 @@ const SignUpScreen = () => {
             fontWeight={500}
             fontSize={"16px"}
           >
-            Become fluent faster through one on one video chat lessons tailored
-            to your goals.
+            {LL.login.becomeFluentFaster()}
           </Text>
           <VStack w="full">
             <Flex mb={4} w={"full"}>
               <Text color="#A4B0BE" mb={2}>
-                EMAIL
+                {LL.login.email().toUpperCase()}
               </Text>
               <Controller
                 control={control}
@@ -103,7 +104,7 @@ const SignUpScreen = () => {
               }
             </Flex>
             <Flex mb={"6"}>
-              <Text color="#A4B0BE">PASSWORD</Text>
+              <Text color="#A4B0BE">{LL.login.password().toUpperCase()}</Text>
               <Controller
                 control={control}
                 render={({ field: { onChange, onBlur, value } }) => (
@@ -129,11 +130,11 @@ const SignUpScreen = () => {
             </Flex>
             <Button mb={6} onPress={handleSubmit(onSubmit)} py={2.5}>
               <Text fontSize={20} color="white" fontWeight={500}>
-                SIGN UP
+                {LL.login.signUp().toUpperCase()}
               </Text>
             </Button>
             <Center>
-              <Text fontSize={16}>Or continue with</Text>
+              <Text fontSize={16}>{LL.login.orContinueWith()}</Text>
               <HStack space={6} mt={6}>
                 <SvgUri
                   width={40}
@@ -169,12 +170,12 @@ const SignUpScreen = () => {
                 </Container>
               </HStack>
               <HStack mt={6}>
-                <Text>Already have an account? </Text>
+                <Text>{LL.signUp.alreadyHaveAnAccount()} </Text>
                 <Text
                   color={"#1890ff"}
                   onPress={() => navigation.navigate("Login" as never)}
                 >
-                  Log in
+                  {LL.login.login()}
                 </Text>
               </HStack>
             </Center>

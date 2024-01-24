@@ -16,6 +16,7 @@ import { Course } from "../../types/Course";
 import { BaseResponse } from "../../types/Response/BaseResponse";
 import { CourseStackParamList, CoursesStackNavigationProp } from "../../types/Route/Stack";
 import { levelLabelMapper } from "../../constants/LevelConstant";
+import { useI18nContext } from "../../i18n/i18n-react";
 
 const TOPIC_LIST = [
   "The Internet",
@@ -30,6 +31,7 @@ const TOPIC_LIST = [
 ];
 
 const CourseDetailScreen = () => {
+  const {LL} = useI18nContext();
   const navigation = useNavigation<CoursesStackNavigationProp>();
 
   const { params } = useRoute<RouteProp<CourseStackParamList, "Course Detail">>()
@@ -64,17 +66,17 @@ const CourseDetailScreen = () => {
               mt={4}
               onPress={() => navigation.navigate("Explore Course", {courseId: params.courseId, topicId: courseResponse?.data.topics[0].id || ""})}
             >
-              Discover
+              {LL.courses.discover()}
             </Button>
           </VStack>
         </VStack>
         <Text fontSize={22} fontWeight={600} mt={8} ml={6}>
-          Overview
+          {LL.courses.overview()}
         </Text>
         <HStack space={2} alignItems={"center"} mt={4}>
           <FontAwesomeIcon icon={faQuestionCircle} color="#C75340" />
           <Text fontSize={16} fontWeight={500}>
-            Why take this course
+            {LL.courses.whyTakeThisCourse()}
           </Text>
         </HStack>
         <Text ml={6} mt={2}>
@@ -83,14 +85,14 @@ const CourseDetailScreen = () => {
         <HStack space={2} alignItems={"center"} mt={4}>
           <FontAwesomeIcon icon={faQuestionCircle} color="#C75340" />
           <Text fontSize={16} fontWeight={500}>
-            What will you be able to do
+            {LL.courses.whatWillYouBeAbleToDo()}
           </Text>
         </HStack>
         <Text ml={6} mt={2}>
           {courseResponse?.data.purpose}
         </Text>
         <Text fontSize={22} fontWeight={600} mt={8} ml={6}>
-          Experience Level
+          {LL.courses.experienceLevel()}
         </Text>
         <HStack space={2} alignItems={"center"} mt={4}>
           <FontAwesomeIcon icon={faUserPlus} color="#4464B8" />
@@ -99,16 +101,16 @@ const CourseDetailScreen = () => {
           </Text>
         </HStack>
         <Text fontSize={22} fontWeight={600} mt={8} ml={6}>
-          Course Length
+          {LL.courses.courseLength()}
         </Text>
         <HStack space={2} alignItems={"center"} mt={4}>
           <FontAwesomeIcon icon={faBook} color="#4464B8" />
           <Text fontSize={16} fontWeight={500}>
-            {courseResponse?.data.topics.length} topics
+            {courseResponse?.data.topics.length} {LL.courses.topics()}
           </Text>
         </HStack>
         <Text fontSize={22} fontWeight={600} mt={8} ml={6}>
-          List Topics
+          {LL.courses.listTopics()}
         </Text>
         <VStack space={3.5} mt={4}>
           {courseResponse?.data.topics.map((topic, index) => (
@@ -128,7 +130,7 @@ const CourseDetailScreen = () => {
           ))}
         </VStack>
         <Text fontSize={22} fontWeight={600} mt={8} ml={6}>
-          Suggested Tutors
+          {LL.courses.suggestedTutors()}
         </Text>
         <VStack mt={4} ml={3}>
           {courseResponse?.data.users?.map((user, index) => 

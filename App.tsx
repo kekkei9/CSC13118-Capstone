@@ -1,3 +1,5 @@
+import 'intl-pluralrules'
+
 import { DarkTheme, DefaultTheme, NavigationContainer } from "@react-navigation/native";
 import { useFonts } from "expo-font";
 import { Container, NativeBaseProvider, View, extendTheme, useColorMode } from "native-base";
@@ -13,6 +15,10 @@ import { LogBox } from "react-native";
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import customParseFormat from "dayjs/plugin/customParseFormat";
+import TypesafeI18n, { I18nContext, useI18nContext } from './src/i18n/i18n-react';
+import { useEffect } from 'react';
+import { loadAllLocalesAsync } from './src/i18n/i18n-util.async';
+import { loadAllLocales } from './src/i18n/i18n-util.sync';
 // LogBox.ignoreLogs(["Warning: ..."]); // Ignore log notification by message
 // LogBox.ignoreAllLogs(); //Ignore all log notifications
 
@@ -76,9 +82,15 @@ const LightTheme = {
 }
 
 const NavigationProvider = () => { 
+  const { setLocale } = useI18nContext();
   const {
     colorMode,
   } = useColorMode();
+  
+  useEffect(() => {
+    loadAllLocales();
+    setLocale("vi");
+  }, [])
 
   return (
   <NavigationContainer theme={colorMode === "light" ? LightTheme : DarkTheme}>
@@ -117,17 +129,19 @@ export default function App() {
   }
 
   return (
-    <SWRConfig
-      value={{
-        refreshInterval: 300000,
-        fetcher: fetcher,
-      }}
-    >
-      <Provider store={store}>
-        <NativeBaseProvider theme={theme}>
-          <NavigationProvider />
-        </NativeBaseProvider>
-      </Provider>
-    </SWRConfig>
+    <TypesafeI18n locale="en">
+      <SWRConfig
+        value={{
+          refreshInterval: 300000,
+          fetcher: fetcher,
+        }}
+      >
+        <Provider store={store}>
+          <NativeBaseProvider theme={theme}>
+            <NavigationProvider />
+          </NativeBaseProvider>
+        </Provider>
+      </SWRConfig>
+    </TypesafeI18n>
   );
 }

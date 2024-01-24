@@ -1,20 +1,36 @@
 import { Button, Container, Flex, Text } from "native-base";
 import { useState } from "react";
 import { SvgUri } from "react-native-svg";
-import { supportedLanguages } from "./languages";
+import { useI18nContext } from "../../i18n/i18n-react";
 
 const ChooseLanguage = () => {
-  //TODO: move this to redux later
-  const [currentLanguage, setCurrentLanguage] = useState<string>("en");
+  const {locale, setLocale, LL} = useI18nContext();
   const [showLanguagePopup, setShowLanguagePopup] = useState<boolean>(false);
 
-  const onChooseLanguage = (locale: string) => {
-    setCurrentLanguage(locale);
+  const onChooseLanguage = (locale: "vi" | "en") => {
+    setLocale(locale);
     setShowLanguagePopup(false);
   };
 
+  const supportedLanguages = [
+    {
+      name: LL.language.english(),
+      locale: "en",
+      icon: "https://sandbox.app.lettutor.com/static/media/united-states.eb0c11f1.svg",
+    },
+    {
+      name: LL.language.vietnamese(),
+      locale: "vi",
+      icon: "https://sandbox.app.lettutor.com/static/media/vietnam.3745180b.svg",
+    },
+  ];
+  
+
   return (
     <Container>
+      {/* <TouchableWithoutFeedback onPress={() => setShowLanguagePopup(false)}>
+        <View style={{width: '100%', height: '100%', position: 'absolute', left: 0, top: 0}} />
+      </TouchableWithoutFeedback> */}
       <Button
         _light={{backgroundColor: "rgb(228, 230, 235)"}}
         _dark={{backgroundColor: "rgb(100, 100, 100)"}}
@@ -26,7 +42,7 @@ const ChooseLanguage = () => {
         <SvgUri
           uri={
             supportedLanguages.find(
-              (language) => language.locale === currentLanguage
+              (language) => language.locale === locale
             )?.icon || ""
           }
           width={18}
@@ -45,8 +61,8 @@ const ChooseLanguage = () => {
             <Flex
               direction="row"
               paddingX={3}
-              paddingY={1.25}
-              onTouchStart={() => onChooseLanguage(locale)}
+              paddingY={1.5}
+              onTouchStart={() => onChooseLanguage(locale as "vi" | "en")}
               shadow={"10"}
               key={locale}
               _light={{ backgroundColor: "white" }}

@@ -7,6 +7,7 @@ import { SvgUri } from "react-native-svg";
 import { HistoryItem } from "../../types/Schedule";
 import dayjs from "dayjs";
 import { countryNameMapper } from "../../constants/CountryConstant";
+import { useI18nContext } from "../../i18n/i18n-react";
 
 type BookeditemType = {
   scheduleItem: HistoryItem;
@@ -14,6 +15,7 @@ type BookeditemType = {
 
 const BookedItem = ({scheduleItem}: BookeditemType) => {
   const navigation = useNavigation();
+  const {LL} = useI18nContext();
 
   const {scheduleInfo} = scheduleItem.scheduleDetailInfo;
   const {tutorInfo, startTimestamp, startTime, endTime} = scheduleInfo
@@ -30,7 +32,7 @@ const BookedItem = ({scheduleItem}: BookeditemType) => {
       <Text fontSize={24} fontWeight={700}>
         {dayjs(startTimestamp).format("ddd, DD MMM YY")}
       </Text>
-      <Text>1 lesson</Text>
+      <Text>1 {LL.ui.lesson()}</Text>
       <HStack 
         _light={{backgroundColor: "white"}}
         _dark={{backgroundColor: "gray.700"}}
@@ -76,7 +78,7 @@ const BookedItem = ({scheduleItem}: BookeditemType) => {
           <Text flex={1} fontSize={20}>
             {startTime} - {endTime}
           </Text>
-          <Button>Cancel</Button>
+          <Button>{LL.ui.cancel()}</Button>
         </HStack>
         <VStack borderWidth={1} borderColor={"#d9d9d9"}>
           <HStack
@@ -89,18 +91,17 @@ const BookedItem = ({scheduleItem}: BookeditemType) => {
           >
             <HStack alignItems={"center"} space={1.5} flex={1}>
               <FontAwesomeIcon icon={faChevronDown} size={12} />
-              <Text>Request for lesson</Text>
+              <Text>{LL.schedule.requestForLesson()}</Text>
             </HStack>
-            <Text color="rgb(0, 113, 240)" flex={1} textAlign={"right"}>Edit request</Text>
+            <Text color="rgb(0, 113, 240)" flex={1} textAlign={"right"}>{LL.schedule.editRequest()}</Text>
           </HStack>
           <Text p={4} color={!!scheduleItem.studentRequest ? "inherit" : "#8399a7"}>
-            Currently there are no requests for this class. Please write down
-            any requests for the teacher.
+            {LL.schedule.currentlyThereIsNoRequest()}
           </Text>
         </VStack>
       </VStack>
       <Button mt={4} onPress={() => navigation.navigate("Dial" as never)}>
-        Go to meeting
+        {LL.schedule.goToMeeting()}
       </Button>
     </VStack>
   );

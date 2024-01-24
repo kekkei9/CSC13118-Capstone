@@ -4,11 +4,14 @@ import BookedItem from "../../components/BookedItem";
 import useSWR from "swr";
 import { BaseResponseList } from "../../types/Response/BaseResponse";
 import { HistoryItem as HistoryItemType } from "../../types/Schedule";
+import { useI18nContext } from "../../i18n/i18n-react";
 
 
 const PAGE_SIZE =20;
 
 const ScheduleScreen = () => {
+  const {LL} = useI18nContext();
+
   const {data: scheduleResponse} = useSWR<BaseResponseList<HistoryItemType>>(`/booking/list/student?page=1&perPage${PAGE_SIZE}0&inFuture=1&orderBy=meeting&sortBy=desc`)
 
   return (
@@ -21,7 +24,7 @@ const ScheduleScreen = () => {
             height={120}
           />
           <Text fontWeight={600} fontSize={30} mb={3}>
-            Schedule
+            {LL.schedule.schedule()}
           </Text>
           <VStack
             pl={2}
@@ -29,16 +32,15 @@ const ScheduleScreen = () => {
             borderLeftWidth={4}
           >
             <Text fontSize={16}>
-              Here is a list of the sessions you have booked
+              {LL.schedule.hereIsAList()}
             </Text>
             <Text fontSize={16}>
-              You can track when the meeting starts, join the meeting with one
-              click or can cancel the meeting before 2 hours
+              {LL.schedule.youCanTrack()}
             </Text>
           </VStack>
         </VStack>
         <VStack px={7} pt={12} pb={4}>
-          <Text fontWeight={700}>Latest book</Text>
+          <Text fontWeight={700}>{LL.schedule.latestBook()}</Text>
         </VStack>
         <VStack px={7} space={6}>
           {scheduleResponse?.data.rows.map((scheduleItem) => (

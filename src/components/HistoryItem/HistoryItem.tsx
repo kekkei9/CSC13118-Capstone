@@ -6,15 +6,17 @@ import { countryNameMapper } from "../../constants/CountryConstant";
 import { HistoryItem as HistoryItemType } from "../../types/Schedule";
 import { timeDiff } from "../../utils/date";
 import RatingDisplay from "../RatingDisplay";
+import { useI18nContext } from "../../i18n/i18n-react";
 
 type HistoryItemProps = {
   historyItem: HistoryItemType;
 }
 
 const HistoryItem = ({historyItem}: HistoryItemProps) => {
+  const {LL} = useI18nContext();
+  
   const {scheduleInfo} = historyItem.scheduleDetailInfo;
   const {tutorInfo, endTimestamp, startTime, endTime} = scheduleInfo
-
 
   return (
     <VStack
@@ -61,7 +63,7 @@ const HistoryItem = ({historyItem}: HistoryItemProps) => {
           </HStack>
           <HStack space={2}>
             <FontAwesomeIcon icon={faComment} color="#1890ff" />
-            <Text color={"#1890ff"}>Direct Mesage</Text>
+            <Text color={"#1890ff"}>{LL.history.directMessage()}</Text>
           </HStack>
         </VStack>
       </HStack>
@@ -69,7 +71,7 @@ const HistoryItem = ({historyItem}: HistoryItemProps) => {
         _light={{backgroundColor: "white"}}
         _dark={{backgroundColor: "gray.700"}}
       >
-        Lesson Time: {startTime} - {endTime}
+        {LL.history.lessonTime()}: {startTime} - {endTime}
       </Text>
       <VStack
         _light={{backgroundColor: "white"}}
@@ -77,7 +79,7 @@ const HistoryItem = ({historyItem}: HistoryItemProps) => {
         mt={6}
       >
         <Text px={4} py={3}>
-          {historyItem.studentRequest || "No request for lesson"}
+          {historyItem.studentRequest || LL.history.noRequestForLesson()}
         </Text>
         <Text
           borderColor={"rgb(217, 217, 217)"}
@@ -86,7 +88,7 @@ const HistoryItem = ({historyItem}: HistoryItemProps) => {
           px={4}
           py={3}
         >
-          Tutor haven't review yet
+          {LL.history.tutorHaventReviewYet()}
         </Text>
         {historyItem.feedbacks.map(({rating, id}) => (<Flex
           wrap="wrap"
@@ -113,9 +115,9 @@ const HistoryItem = ({historyItem}: HistoryItemProps) => {
           px={4}
           py={3}
         >
-          <Text color={"#1890ff"}>Add a Rating</Text>
-          <Text color={"#1890ff"}>Report</Text>
-        </Flex> : null   }
+          <Text color={"#1890ff"}>{LL.ui.addARating()}</Text>
+          <Text color={"#1890ff"}>{LL.ui.report()}</Text>
+        </Flex> : null}
       </VStack>
     </VStack>
   );

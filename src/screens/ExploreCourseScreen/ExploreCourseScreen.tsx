@@ -5,6 +5,7 @@ import { CourseStackParamList, CoursesStackNavigationProp } from "../../types/Ro
 import useSWR from "swr";
 import { BaseResponse } from "../../types/Response/BaseResponse";
 import { Course } from "../../types/Course";
+import { useI18nContext } from "../../i18n/i18n-react";
 
 const TOPIC_LIST = [
   "The Internet",
@@ -19,6 +20,7 @@ const TOPIC_LIST = [
 ];
 
 const ExploreCourseScreen = () => {
+  const {LL} = useI18nContext();
   const [currentTopicId, setCurrentTopicId] = useState<string>(""); 
   const { params } = useRoute<RouteProp<CourseStackParamList, "Explore Course">>()
 
@@ -49,7 +51,7 @@ const ExploreCourseScreen = () => {
           {courseResponse?.data.description}
         </Text>
         <Text fontSize={22} fontWeight={600} mt={8} ml={6}>
-          List Topics
+          {LL.courses.listTopics()}
         </Text>
         <VStack space={3.5} mt={4} mx={6}>
           {courseResponse?.data.topics.map((topic, index) => (

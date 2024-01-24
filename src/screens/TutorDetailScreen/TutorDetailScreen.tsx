@@ -27,12 +27,14 @@ import { BaseResponseList } from "../../types/Response/BaseResponse";
 import { TutorStackParamList } from "../../types/Route/Stack";
 import { Feedback, TutorDetail } from "../../types/Tutor";
 import { timeDiff } from "../../utils/date";
+import { useI18nContext } from "../../i18n/i18n-react";
 
 //to fetch all tutors
 const PAGE_SIZE = 100;
 
 const TutorDetailScreen = () => {
   const toast = useToast();
+  const {LL} = useI18nContext();
   const { params } = useRoute<RouteProp<TutorStackParamList, "Tutor Detail">>();
 
   const { data: tutor, mutate: mutateTutor } = useSWR<TutorDetail>(
@@ -134,7 +136,7 @@ const TutorDetailScreen = () => {
             }}
           >
             <Text color={tutor.isFavorite ? "#FF6251" : "#1890ff"}>
-              Favorite
+              {LL.tutorDetail.favorite()}
             </Text>
           </Button>
           <Button
@@ -153,7 +155,9 @@ const TutorDetailScreen = () => {
               bg: "transparent",
             }}
           >
-            <Text color={"#1890ff"}>Report</Text>
+            <Text color={"#1890ff"}>
+              {LL.ui.report()}
+            </Text>
           </Button>
         </HStack>
         {/* <Video
@@ -162,11 +166,11 @@ const TutorDetailScreen = () => {
           }} // Can be a URL or a local file.
         /> */}
         <Text fontSize={18} my={2}>
-          Education
+          {LL.tutorDetail.education()}
         </Text>
         <Text ml={4}>{tutor.education}</Text>
         <Text fontSize={18} my={2}>
-          Languages
+          {LL.tutorDetail.languages()}
         </Text>
         <HStack ml={4}>
           {tutor.languages.split(",").map((language, index) => (
@@ -174,7 +178,7 @@ const TutorDetailScreen = () => {
           ))}
         </HStack>
         <Text fontSize={18} my={2}>
-          Specialties
+          {LL.tutorDetail.specialties()}
         </Text>
         <HStack ml={4}>
           {tutor.specialties.split(",").map((specialty, index) => (
@@ -186,15 +190,15 @@ const TutorDetailScreen = () => {
           ))}
         </HStack>
         <Text fontSize={18} my={2}>
-          Interests
+          {LL.tutorDetail.interests()}
         </Text>
         <Text ml={4}>{tutor.interests}</Text>
         <Text fontSize={18} my={2}>
-          Teaching experience
+          {LL.tutorDetail.teachingExperience()}
         </Text>
         <Text ml={4}>{tutor.experience}</Text>
         <Text fontSize={18} my={2}>
-          Other reviews
+          {LL.tutorDetail.otherReviews()}
         </Text>
         <VStack>
           {tutorFeedbacks?.data.rows.slice(0,10)?.map((feedback) => (

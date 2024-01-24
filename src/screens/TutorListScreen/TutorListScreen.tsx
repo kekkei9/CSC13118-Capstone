@@ -31,6 +31,7 @@ import { BaseResponseList } from "../../types/Response/BaseResponse";
 import { TutorsStackNavigationProp } from "../../types/Route/Stack";
 import { HistoryItem as HistoryItemType } from "../../types/Schedule";
 import { Tutor } from "../../types/Tutor";
+import { useI18nContext } from "../../i18n/i18n-react";
 
 const PAGE_SIZE = 12;
 
@@ -50,6 +51,7 @@ const FILTER_SPECIALTIES = [
 
 const TutorListScreen = () => {
   const toast = useToast();
+  const {LL} = useI18nContext();
   const navigation = useNavigation<TutorsStackNavigationProp>();
   const [tutorFilter, setTutorFilter] = useState<TutorFilter>(initTutorFilter);
   const [search, setSearch] = useState<string>("");
@@ -127,7 +129,7 @@ const TutorListScreen = () => {
           pb={8}
         >
           <Text fontSize={30} mt={3} color={"white"}>
-            Upcoming lesson
+            {LL.tutorList.upcomingLesson()}
           </Text>
           <HStack w="full" mt={3} alignItems={"center"}>
             <Container p={2} flex={2} >
@@ -135,7 +137,7 @@ const TutorListScreen = () => {
                 {dayjs(latestSchedule?.scheduleDetailInfo.startPeriodTimestamp).format("ddd, DD MMM YY")}{" "}
                 {dayjs(latestSchedule?.scheduleDetailInfo.startPeriodTimestamp).format("HH:mm")} - {dayjs(latestSchedule?.scheduleDetailInfo.endPeriodTimestamp).format("HH:mm")}
               </Text>
-              <Text color={"#ffff00"} textAlign={"center"}>(starts in {displayUpcomingTime})</Text>
+              <Text color={"#ffff00"} textAlign={"center"}>({LL.tutorList.startsIn()} {displayUpcomingTime})</Text>
             </Container>
             <Button
               fontSize={16}
@@ -145,16 +147,16 @@ const TutorListScreen = () => {
               onPress={() => navigation.navigate("Dial" as never)}
               rounded={"full"}
             >
-              Enter lesson room
+              {LL.tutorList.enterLessonRoom()}
             </Button>
           </HStack>
           <Text fontSize={16} color={"white"} mt={2}>
-            Total lesson time is {hours} hours {minutes} minutes 
+            {LL.tutorList.totalLessonTimeIs()} {hours} {LL.ui.hours()} {minutes} {LL.ui.minutes()} 
           </Text>
         </Center>
         <VStack py={8} px={5} space={5}>
           <Text fontWeight={700} fontSize={29}>
-            Find a tutor
+            {LL.tutorList.findATutor()}
           </Text>
           <Input
             flex={1}
@@ -170,15 +172,15 @@ const TutorListScreen = () => {
             >
               <HStack space={2} mb={2}>
                 <Checkbox flex={1} value="isVietnamese">
-                  Vietnamese Tutor
+                  {LL.tutorList.vietnameseTutor()}
                 </Checkbox>
                 <Checkbox flex={1} value="isForeign">
-                  Foreign Tutor
+                  {LL.tutorList.foreignTutor()}
                 </Checkbox>
               </HStack>
               <HStack space={2}>
                 <Checkbox flex={1} value="isNative">
-                  Native English Tutor
+                  {LL.tutorList.nativeTutor()}
                 </Checkbox>
               </HStack>
             </Checkbox.Group>
@@ -216,13 +218,11 @@ const TutorListScreen = () => {
               variant={"outline"}
               rounded={"full"}
               borderColor={"#1890ff"}
-              alignItems={"center"}
-              justifyContent={"center"}
-              w={120}
+              alignSelf={"flex-start"}
               py={1}
               px={4}
             >
-              <Text color={"#1890ff"}>Reset Filters</Text>
+              <Text color={"#1890ff"}>{LL.tutorList.resetFilters()}</Text>
             </Button>
           </VStack>
           <Text fontSize={20} fontWeight={600} my={1.5}>
@@ -287,7 +287,7 @@ const TutorListScreen = () => {
                   alt="No tutor found"
                   style={{ objectFit: "contain" }}
                 />
-                <Text>Sorry we can't find any tutor with this keywords</Text>
+                <Text>{LL.tutorList.sorryWeCantFindAnyTutors()}</Text>
             </Center>}
         </VStack>
       </VStack>

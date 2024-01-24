@@ -1,15 +1,16 @@
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import TopNav from "../../../containers/TopNav";
-import HistoryScreen from "../../../screens/HistoryScreen";
+import { useI18nContext } from "../../../i18n/i18n-react";
 import ScheduleScreen from "../../../screens/ScheduleScreen";
-import CoursesStack from "../../Stacks/CoursesStack";
-import TutorsStack from "../../Stacks/TutorsStack";
-import CustomDrawerContent from "../CustomDrawerContent";
 import SettingScreen from "../../../screens/SettingScreen";
+import CoursesStack from "../../Stacks/CoursesStack";
+import CustomDrawerContent from "../CustomDrawerContent";
 
 const Drawer = createDrawerNavigator();
 
 const TeacherDrawer = () => {
+  const {LL} = useI18nContext();
+ 
   return (
     <Drawer.Navigator
       initialRouteName="Tutors"
@@ -20,9 +21,9 @@ const TeacherDrawer = () => {
       }}
       drawerContent={(props) => <CustomDrawerContent {...props} />}
     >
-      <Drawer.Screen name="Schedule" component={ScheduleScreen} />
-      <Drawer.Screen name="Courses" component={CoursesStack} />
-      <Drawer.Screen name="Settings" component={SettingScreen} />
+      <Drawer.Screen name={LL.nav.schedule() || "Schedule"} component={ScheduleScreen} />
+      <Drawer.Screen name={LL.nav.courses() || "Courses"} component={CoursesStack} />
+      <Drawer.Screen name={LL.nav.settings() || "Settings"} component={SettingScreen} />
     </Drawer.Navigator>
   );
 };

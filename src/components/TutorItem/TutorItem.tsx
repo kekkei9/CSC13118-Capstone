@@ -20,6 +20,7 @@ import { countryNameMapper } from "../../constants/CountryConstant";
 import { Tutor } from "../../types/Tutor";
 import RatingDisplay from "../RatingDisplay";
 import Tag from "../Tag/Tag";
+import { useI18nContext } from "../../i18n/i18n-react";
 
 type TutorItemProps = {
   tutor: Tutor;
@@ -41,6 +42,8 @@ const TutorItem = ({
   onPress,
   onPressFavorite,
 }: TutorItemProps) => {
+  const {LL} = useI18nContext();
+
   return (
     <VStack
       p={5}
@@ -137,7 +140,7 @@ const TutorItem = ({
           alignItems={"center"}
           justifyContent={"center"}
         >
-          <Text color={"#1890ff"}>Book</Text>
+          <Text color={"#1890ff"}>{LL.tutorList.book()}</Text>
         </Button>
       </HStack>
     </VStack>

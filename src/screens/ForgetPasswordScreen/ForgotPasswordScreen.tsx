@@ -2,9 +2,11 @@ import { useNavigation } from "@react-navigation/native";
 import { Button, Input, Text, VStack, View, useToast } from "native-base";
 import { useState } from "react";
 import { sendForgotPasswordEmail } from "../../services/backend/AuthController";
+import { useI18nContext } from "../../i18n/i18n-react";
 
 const ForgotPasswordScreen = () => {
   const toast = useToast();
+  const {LL} = useI18nContext();
   const [email, setEmail] = useState("");
   const [sentEmail, setSentEmail] = useState(false);
 
@@ -32,19 +34,19 @@ const ForgotPasswordScreen = () => {
     >
       <VStack alignItems="center" justifyContent="center">
         <Text fontWeight={"bold"} fontSize={30} mb={4} textAlign={"center"}>
-          Reset Password
+          {LL.forgotPassword.resetPassword()}
         </Text>
         <Text mb={3.5} textAlign={"center"} fontSize={14}>
-          Please enter your email address to search for your account.
+          {LL.forgotPassword.pleaseEnterEmail()}
         </Text>
         { !sentEmail && 
           <>
             <VStack space={2} w={"full"}>
-              <Text>Email</Text>
+              <Text>{LL.login.email()}</Text>
               <Input w={"full"} value={email} onChangeText={setEmail} />
             </VStack>
             <Button mt={8} onPress={handleClickSendResetLink}>
-              Send reset link
+              {LL.forgotPassword.sendResetLink()}
             </Button>
           </>
         }
