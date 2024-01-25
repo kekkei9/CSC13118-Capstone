@@ -44,6 +44,11 @@ const vi = {
 		interests: "Sở thích",
 		teachingExperience: "Kinh nghiệm giảng dạy",
 		otherReviews: "Người khác đánh giá",
+		helpUsUnderStand: "Bạn đang gặp phải vấn đề gì",
+		thisTutorIsAnnoying: "Gia sư này làm phiền tôi",
+		thisProfileIsPretending: "Hồ sơ này là giả mạo",
+		inappropriateProfilePhoto: "Ảnh hồ sơ không phù hợp",
+		pleaseLetUsKnow: "Vui lòng điền thêm thông tin chi tiết vấn đề bạn gặp phải",
 	},
 	schedule: {
 		schedule: "Lịch đã đặt",

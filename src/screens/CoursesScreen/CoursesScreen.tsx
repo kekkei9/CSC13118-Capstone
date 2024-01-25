@@ -1,66 +1,67 @@
+import { useNavigation } from "@react-navigation/native";
 import {
-  Text,
-  VStack,
+  Box,
+  Flex,
   HStack,
-  ScrollView,
   Input,
   Select,
-  Flex,
-  Center,
-  Box,
-  useColorModeValue,
-  View,
+  Text,
+  VStack,
+  useColorModeValue
 } from "native-base";
-import CourseItem from "../../components/CourseItem";
-import { useNavigation } from "@react-navigation/native";
+import React, { useEffect, useRef, useState } from "react";
+import { Animated, FlatList, Pressable, useWindowDimensions } from "react-native";
 import { SvgUri } from "react-native-svg";
-import { Animated, Dimensions, Pressable, StatusBar } from "react-native";
 import { SceneMap, TabView } from "react-native-tab-view";
-import { useState } from "react";
 import useSWR from "swr";
-import { BaseResponse, BaseResponseList } from "../../types/Response/BaseResponse";
-import { Course } from "../../types/Course";
-import { CoursesStackNavigationProp } from "../../types/Route/Stack";
 import { useI18nContext } from "../../i18n/i18n-react";
+import { Course } from "../../types/Course";
+import { BaseResponseList } from "../../types/Response/BaseResponse";
+import { CoursesStackNavigationProp } from "../../types/Route/Stack";
+import _ from "lodash";
+import CourseItem from "../../components/CourseItem";
+import * as WebBrowser from 'expo-web-browser';
 
-const FirstRoute = () => (
-  <VStack flex={1} my="4">
-    <Text>This is Tab 1</Text>
-    <Text>This is Tab 1</Text>
-    <Text>This is Tab 1</Text>
-    <Text>This is Tab 1</Text>
-    <Text>This is Tab 1</Text>
-    <Text>This is Tab 1</Text>
-    <Text>This is Tab 1</Text>
-    <Text>This is Tab 1</Text>
-    <Text>This is Tab 1</Text>
-  </VStack>
-);
+function VirtualizedView({
+  children,
+  getRef, ...props
+}: { children?: any, getRef?: any } & any) {
+  const {data, renderItem, ...otherProps} = props
+  const flatListRef = useRef();
 
-const SecondRoute = () => (
-  <Center flex={1} my="4">
-    This is Tab 2
-  </Center>
-);
+  useEffect(() => {
+    if (getRef && flatListRef.current)
+    getRef(flatListRef.current)
+  }, [flatListRef]);
 
-const ThirdRoute = () => (
-  <Center flex={1} my="4">
-    This is Tab 3
-  </Center>
-);
 
-const initialLayout = {
-  width: Dimensions.get("window").width,
-};
+  function header() {
+    return <React.Fragment>{children}</React.Fragment>;
+  }
+
+  return (
+    <FlatList
+      ref={flatListRef}
+      data={[]}
+      ListEmptyComponent={null}
+      renderItem={null}
+      ListHeaderComponent={header()}
+      {...otherProps}
+    />
+  );
+}
+
 const renderScene = SceneMap({
-  course: FirstRoute,
-  ebook: SecondRoute,
-  interactiveEbook: ThirdRoute,
+  course: () => <></>,
+  "e-book": () => <></>,
+  "interactive-e-book": () => <></>,
 });
 
 const CoursesScreen = () => {
   const {LL} = useI18nContext();
+  const layout = useWindowDimensions();
 
+  const [search, setSearch] = useState<string>("");
   const [index, setIndex] = useState<number>(0);
   const [routes] = useState<{ key: string; title: string }[]>([
     {
@@ -68,29 +69,20 @@ const CoursesScreen = () => {
       title: "Course",
     },
     {
-      key: "ebook",
+      key: "e-book",
       title: "E-Book",
     },
     {
-      key: "interactiveEbook",
+      key: "interactive-e-book",
       title: "Interactive E-book",
     },
   ]);
   const navigation = useNavigation<CoursesStackNavigationProp>();
 
   const renderTabBar = (props: any) => {
-    const inputRange = props.navigationState.routes.map(
-      (x: any, i: number) => i
-    );
     return (
       <Box flexDirection="row">
         {props.navigationState.routes.map((route: any, i: number) => {
-          const opacity = props.position.interpolate({
-            inputRange,
-            outputRange: inputRange.map((inputIndex: any) =>
-              inputIndex === i ? 1 : 0.5
-            ),
-          });
           const color =
             index === i
               ? useColorModeValue("#000", "#e5e5e5")
@@ -127,12 +119,14 @@ const CoursesScreen = () => {
     );
   };
 
+  const currentRoute = routes[index].key;
+
   const { data: coursesList } = useSWR<BaseResponseList<Course>>(
-    "/course?page=1&size=100"
+    `/${currentRoute}?page=1&size=${currentRoute === "course" ? 100 : 10}&q=${search}`
   );
 
   return (
-    <ScrollView showsVerticalScrollIndicator={false}>
+    <VirtualizedView>
       <VStack px={10} py={9} flex={1}>
         <HStack space={6}>
           <SvgUri
@@ -144,7 +138,7 @@ const CoursesScreen = () => {
             <Text fontSize={24} fontWeight={600}>
               {LL.courses.discoverCourses()}
             </Text>
-            <Input placeholder="Course" w={"full"} />
+            <Input placeholder="Course" w={"full"} value={search} onChangeText={setSearch}/>
           </VStack>
         </HStack>
         <Text my={4}>
@@ -162,47 +156,40 @@ const CoursesScreen = () => {
             )
           )}
         </Flex>
-        <Flex flex={1} flexDirection={"row"}>
-          <TabView
-            navigationState={{
-              index,
-              routes,
-            }}
-            renderScene={renderScene}
-            renderTabBar={renderTabBar}
-            onIndexChange={setIndex}
-            initialLayout={initialLayout}
-            style={{
-              marginTop: StatusBar.currentHeight,
-            }}
-          />
-        </Flex>
-        {/* <VStack pt={8} space={16}>
-          Categories -> Courses
-          {coursesList?.data.rows.map((_, index)  => (
-            <VStack justifyContent={"center"} key={index} space={8}>
+        <TabView
+          navigationState={{
+            index,
+            routes,
+          }}
+          renderScene={renderScene}
+          renderTabBar={renderTabBar}
+          onIndexChange={setIndex}
+          initialLayout={{ width: layout.width }}
+        />
+        <VStack pt={8} space={16}>
+          {_.entries(_.groupBy(coursesList?.data.rows, "categories[0].title")).map(([category, courses])  => (
+            <VStack justifyContent={"center"} key={category} space={8}>
               <Text fontSize={28} fontWeight={500}>
-                English For Traveling
+                {category}
               </Text>
-              {[...Array(5)].map((_, index) => (
+              {courses.map((course) => (
                 <CourseItem
-                  onClick={() => navigation.navigate("Course Detail" as never)}
-                  key={index}
+                  course={course} 
+                  onClick={() => {
+                    if (currentRoute === "course") {
+                      navigation.navigate("Course Detail", {courseId: course.id})
+                      return;
+                    }
+                    WebBrowser.openBrowserAsync(course.fileUrl || "https://expo.dev");
+                  }}
+                  key={course.id}
                 />
               ))}
             </VStack>
           ))}
-        </VStack> */}
-        <VStack pt={8} space={8}>
-          {coursesList?.data.rows.map((course, index) => 
-           (<CourseItem
-              course={course} 
-              onClick={() => navigation.navigate("Course Detail", {courseId: course.id})}
-              key={course.id}
-             />))}
         </VStack>
       </VStack>
-    </ScrollView>
+    </VirtualizedView>
   );
 };
 

@@ -1,3 +1,4 @@
+import { BaseResponse } from "../../../types/Response/BaseResponse";
 import { Tutor } from "../../../types/Tutor";
 import { axiosClient } from "../axiosClient";
 
@@ -43,3 +44,6 @@ export const searchTutor = (
 
 export const addTutorToFavorite = (tutorId: string) =>
   axiosClient.post(`/user/manageFavoriteTutor`, { tutorId });
+
+export const reportTutor = (content: string, tutorId: string) => 
+  axiosClient.post<BaseResponse<any>>(`/report`, { content, tutorId });
