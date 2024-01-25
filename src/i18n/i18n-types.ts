@@ -303,6 +303,10 @@ type RootTranslation = {
 		 * A​d​d​ ​a​ ​R​a​t​i​n​g
 		 */
 		addARating: string
+		/**
+		 * l​e​s​s​o​n​s
+		 */
+		lessons: string
 	}
 	nav: {
 		/**
@@ -636,6 +640,10 @@ export type TranslationFunctions = {
 		 * Add a Rating
 		 */
 		addARating: () => LocalizedString
+		/**
+		 * lessons
+		 */
+		lessons: () => LocalizedString
 	}
 	nav: {
 		/**

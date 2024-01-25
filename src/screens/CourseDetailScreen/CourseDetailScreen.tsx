@@ -121,7 +121,7 @@ const CourseDetailScreen = () => {
               borderWidth={2}
               onPress={() => navigation.navigate("Explore Course", {courseId: params.courseId, topicId: topic.id})}
               rounded={"sm"}
-              key={index}
+              key={topic.id}
             >
               <Text fontSize={16} fontWeight={500}>
                 {index + 1}. {topic.name}
@@ -133,8 +133,8 @@ const CourseDetailScreen = () => {
           {LL.courses.suggestedTutors()}
         </Text>
         <VStack mt={4} ml={3}>
-          {courseResponse?.data.users?.map((user, index) => 
-          (<HStack>
+          {courseResponse?.data.users?.map((user) => 
+          (<HStack key={user.id}>
             <Text>{user.name} </Text>
             {/* <Text color="#1890ff">More Info</Text> */}
           </HStack>))}

@@ -1,23 +1,12 @@
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
-import { ScrollView, Text, VStack, Image, Pressable } from "native-base";
+import { ScrollView, Text, VStack, Image, Pressable, View } from "native-base";
 import { useEffect, useState } from "react";
 import { CourseStackParamList, CoursesStackNavigationProp } from "../../types/Route/Stack";
 import useSWR from "swr";
 import { BaseResponse } from "../../types/Response/BaseResponse";
 import { Course } from "../../types/Course";
 import { useI18nContext } from "../../i18n/i18n-react";
-
-const TOPIC_LIST = [
-  "The Internet",
-  "Artificial Intelligence (AI)",
-  "Social Media",
-  "Internet Privacy",
-  "Live Streaming",
-  "Coding",
-  "Technology Transforming Healthcare",
-  "Smart Home Technology",
-  "Remote Work - A Dream Job?",
-];
+import PDFReader from 'rn-pdf-reader-js'
 
 const ExploreCourseScreen = () => {
   const {LL} = useI18nContext();
@@ -29,6 +18,9 @@ const ExploreCourseScreen = () => {
   }, [params.topicId])
 
   const {data: courseResponse} = useSWR<BaseResponse<Course>>(`/course/${params.courseId}`)
+
+  const pdfUrl = courseResponse?.data.topics.find(topic => topic.id === currentTopicId)?.nameFile;
+  console.log(pdfUrl)
 
   return (
     <ScrollView>
@@ -73,6 +65,20 @@ const ExploreCourseScreen = () => {
               </Text>
             </Pressable>
           ))}
+          { pdfUrl ?
+            <View>
+            <PDFReader
+              source={{
+                uri: pdfUrl,
+              }}
+              style={{
+                width: "100%",
+                height: 800,
+              }}
+            />
+          </View>
+          : null }
+          
         </VStack>
       </VStack>
     </ScrollView>

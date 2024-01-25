@@ -86,6 +86,7 @@ const en = {
 		report: "Report",
 		review: "Review",
 		addARating: "Add a Rating",
+		lessons: "lessons",
 	},
 	nav: {
 		tutors: "Tutors",
