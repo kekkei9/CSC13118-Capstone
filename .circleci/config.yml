@@ -1,0 +1,36 @@
+version: 2.1
+
+executors:
+  default:
+    docker:
+      - image: cimg/node:lts
+    working_directory: ~/my-app
+
+jobs:
+  eas_build:
+    executor: default
+    steps:
+      - checkout
+      - run:
+          name: Install dependencies
+          command: |
+            if [ -e yarn.lock ]; then
+            yarn install --frozen-lockfile
+            elif [ -e package-lock.json ]; then
+            npm ci
+            else
+            npm i
+            fi
+      - run:
+          name: Trigger build
+          no_output_timeout: 30m
+          command: |
+            npx eas-cli build -p android --profile preview --non-interactive
+
+workflows:
+  build_app:
+    jobs:
+      - eas_build:
+          filters:
+            branches:
+              only: main
