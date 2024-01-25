@@ -17,7 +17,8 @@
     ],
     "ios": {
       "jsEngine": "jsc",
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.kekkei.Capstone"
     },
     "android": {
       "adaptiveIcon": {
