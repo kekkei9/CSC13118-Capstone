@@ -11,6 +11,7 @@ import {
   ScrollView,
   Text,
   VStack,
+  useToast,
 } from "native-base";
 import { Controller, useForm } from "react-hook-form";
 import { SvgUri } from "react-native-svg";
@@ -32,6 +33,7 @@ const SignUpScreen = () => {
     handleSubmit,
   } = useForm<FormValues>();
 
+  const toast = useToast();
   const navigation = useNavigation();
   const {LL} = useI18nContext();
   const [show, setShow] = useState(false);
@@ -41,6 +43,9 @@ const SignUpScreen = () => {
 
     await signUpByEmailPassword(email, password);
     navigation.navigate("Login" as never);
+    toast.show({
+      title: "Please check your email to verify your account",
+    });
   };
 
   return (

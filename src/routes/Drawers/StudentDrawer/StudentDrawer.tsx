@@ -8,6 +8,7 @@ import CustomDrawerContent from "../CustomDrawerContent";
 import DialScreen from "../../../screens/DialScreen";
 import SettingScreen from "../../../screens/SettingScreen";
 import { useI18nContext } from "../../../i18n/i18n-react";
+import EditProfileScreen from "../../../screens/EditProfileScreen";
 
 const Drawer = createDrawerNavigator();
 
@@ -16,7 +17,6 @@ const StudentDrawer = () => {
 
   return (
     <Drawer.Navigator
-      initialRouteName={LL.nav.tutors() || "Tutors"}
       screenOptions={{
         sceneContainerStyle: { flex: 1 },
         header: () => <TopNav />,
@@ -24,7 +24,7 @@ const StudentDrawer = () => {
       }}
       drawerContent={(props) => <CustomDrawerContent {...props} />}
     >
-      <Drawer.Screen name={LL.nav.tutors() || "Tutors"} component={TutorsStack}/>
+      <Drawer.Screen name="Profile" component={EditProfileScreen} />
       <Drawer.Screen name={LL.nav.schedule() || "Schedule"} component={ScheduleScreen} />
       <Drawer.Screen name={LL.nav.history() || "History"} component={HistoryScreen} />
       <Drawer.Screen name={LL.nav.courses() || "Courses"} component={CoursesStack} />
