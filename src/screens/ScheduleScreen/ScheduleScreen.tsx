@@ -5,14 +5,16 @@ import useSWR from "swr";
 import { BaseResponseList } from "../../types/Response/BaseResponse";
 import { HistoryItem as HistoryItemType } from "../../types/Schedule";
 import { useI18nContext } from "../../i18n/i18n-react";
+import Pagination from "../../components/Pagination";
+import { useState } from "react";
 
-
-const PAGE_SIZE =20;
+const PAGE_SIZE = 20;
 
 const ScheduleScreen = () => {
   const {LL} = useI18nContext();
+  const [currentPage, setCurrentPage] = useState<number>(1);
 
-  const {data: scheduleResponse} = useSWR<BaseResponseList<HistoryItemType>>(`/booking/list/student?page=1&perPage${PAGE_SIZE}0&inFuture=1&orderBy=meeting&sortBy=desc`)
+  const {data: scheduleResponse, mutate} = useSWR<BaseResponseList<HistoryItemType>>(`/booking/list/student?page=${currentPage}&perPage${PAGE_SIZE}0&inFuture=1&orderBy=meeting&sortBy=desc`)
 
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
@@ -44,8 +46,14 @@ const ScheduleScreen = () => {
         </VStack>
         <VStack px={7} space={6}>
           {scheduleResponse?.data.rows.map((scheduleItem) => (
-            <BookedItem scheduleItem={scheduleItem} key={scheduleItem.id} />
+            <BookedItem scheduleItem={scheduleItem} key={scheduleItem.id} mutate={mutate} />
           ))}
+          <Pagination 
+              maxBulletNumber={5} 
+              total={(scheduleResponse?.data.count || 0) / PAGE_SIZE} 
+              value={currentPage} 
+              onChange={setCurrentPage}
+          />
         </VStack>
       </VStack>
     </ScrollView>

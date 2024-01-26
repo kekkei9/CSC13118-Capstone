@@ -24,7 +24,7 @@ export type HistoryItem = {
         startPeriodTimestamp: number;
         endPeriodTimestamp: number;
         id: string;
-        scheduleId: string;
+        scheduleDetailId: string;
         startPeriod: string;
         endPeriod: string;
         createdAt: string;
@@ -101,7 +101,7 @@ export type TutorSchedule = {
         startPeriodTimestamp: number;
         endPeriodTimestamp: number;
         id: string;
-        scheduleId: string;
+        scheduleDetailId: string;
         startPeriod: string;
         endPeriod: string;
         createdAt: string;
@@ -111,8 +111,6 @@ export type TutorSchedule = {
             updatedAtTimeStamp: number;
             id: string;
             userId: string;
-            // Add more properties if needed
         }[];
-        // Add more properties if needed
     }[];
 };

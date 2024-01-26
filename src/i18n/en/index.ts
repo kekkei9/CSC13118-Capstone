@@ -44,6 +44,11 @@ const en = {
 		interests: "Interests",
 		teachingExperience: "Teaching experience",
 		otherReviews: "Other reviews",
+		helpUsUnderStand: "Help us understand what's happening",
+		thisTutorIsAnnoying: "This tutor is annoying me",
+		thisProfileIsPretending: "This profile is pretending be someone or is fake",
+		inappropriateProfilePhoto: "Inappropriate profile photo",
+		pleaseLetUsKnow: "Please let us know details about your problem",
 	},
 	schedule: {
 		schedule: "Schedule",
@@ -86,6 +91,7 @@ const en = {
 		report: "Report",
 		review: "Review",
 		addARating: "Add a Rating",
+		lessons: "lessons",
 	},
 	nav: {
 		tutors: "Tutors",

@@ -159,6 +159,26 @@ type RootTranslation = {
 		 * O​t​h​e​r​ ​r​e​v​i​e​w​s
 		 */
 		otherReviews: string
+		/**
+		 * H​e​l​p​ ​u​s​ ​u​n​d​e​r​s​t​a​n​d​ ​w​h​a​t​'​s​ ​h​a​p​p​e​n​i​n​g
+		 */
+		helpUsUnderStand: string
+		/**
+		 * T​h​i​s​ ​t​u​t​o​r​ ​i​s​ ​a​n​n​o​y​i​n​g​ ​m​e
+		 */
+		thisTutorIsAnnoying: string
+		/**
+		 * T​h​i​s​ ​p​r​o​f​i​l​e​ ​i​s​ ​p​r​e​t​e​n​d​i​n​g​ ​b​e​ ​s​o​m​e​o​n​e​ ​o​r​ ​i​s​ ​f​a​k​e
+		 */
+		thisProfileIsPretending: string
+		/**
+		 * I​n​a​p​p​r​o​p​r​i​a​t​e​ ​p​r​o​f​i​l​e​ ​p​h​o​t​o
+		 */
+		inappropriateProfilePhoto: string
+		/**
+		 * P​l​e​a​s​e​ ​l​e​t​ ​u​s​ ​k​n​o​w​ ​d​e​t​a​i​l​s​ ​a​b​o​u​t​ ​y​o​u​r​ ​p​r​o​b​l​e​m
+		 */
+		pleaseLetUsKnow: string
 	}
 	schedule: {
 		/**
@@ -303,6 +323,10 @@ type RootTranslation = {
 		 * A​d​d​ ​a​ ​R​a​t​i​n​g
 		 */
 		addARating: string
+		/**
+		 * l​e​s​s​o​n​s
+		 */
+		lessons: string
 	}
 	nav: {
 		/**
@@ -492,6 +516,26 @@ export type TranslationFunctions = {
 		 * Other reviews
 		 */
 		otherReviews: () => LocalizedString
+		/**
+		 * Help us understand what's happening
+		 */
+		helpUsUnderStand: () => LocalizedString
+		/**
+		 * This tutor is annoying me
+		 */
+		thisTutorIsAnnoying: () => LocalizedString
+		/**
+		 * This profile is pretending be someone or is fake
+		 */
+		thisProfileIsPretending: () => LocalizedString
+		/**
+		 * Inappropriate profile photo
+		 */
+		inappropriateProfilePhoto: () => LocalizedString
+		/**
+		 * Please let us know details about your problem
+		 */
+		pleaseLetUsKnow: () => LocalizedString
 	}
 	schedule: {
 		/**
@@ -636,6 +680,10 @@ export type TranslationFunctions = {
 		 * Add a Rating
 		 */
 		addARating: () => LocalizedString
+		/**
+		 * lessons
+		 */
+		lessons: () => LocalizedString
 	}
 	nav: {
 		/**

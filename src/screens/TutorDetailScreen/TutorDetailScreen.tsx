@@ -1,6 +1,7 @@
 import { faHeart as faHeartRegular } from "@fortawesome/free-regular-svg-icons";
 import {
   faCircleExclamation,
+  faExclamationCircle,
   faHeart as faHeartSolid,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
@@ -9,12 +10,19 @@ import ISO6391 from "iso-639-1";
 import _ from "lodash";
 import {
   Button,
+  Checkbox,
   Container,
+  Flex,
+  FormControl,
   HStack,
   Image,
+  Input,
+  Modal,
   ScrollView,
   Text,
+  TextArea,
   VStack,
+  View,
   useToast,
 } from "native-base";
 import useSWR from "swr";
@@ -22,12 +30,14 @@ import RatingDisplay from "../../components/RatingDisplay";
 import Tag from "../../components/Tag/Tag";
 import { countryNameMapper } from "../../constants/CountryConstant";
 import BookingTable from "../../containers/BookingTable";
-import { addTutorToFavorite } from "../../services/backend/TutorController";
+import { addTutorToFavorite, reportTutor } from "../../services/backend/TutorController";
 import { BaseResponseList } from "../../types/Response/BaseResponse";
 import { TutorStackParamList } from "../../types/Route/Stack";
 import { Feedback, TutorDetail } from "../../types/Tutor";
 import { timeDiff } from "../../utils/date";
 import { useI18nContext } from "../../i18n/i18n-react";
+import { useRef, useState } from "react";
+import { Video, ResizeMode, AVPlaybackStatus } from 'expo-av';
 
 //to fetch all tutors
 const PAGE_SIZE = 100;
@@ -36,6 +46,12 @@ const TutorDetailScreen = () => {
   const toast = useToast();
   const {LL} = useI18nContext();
   const { params } = useRoute<RouteProp<TutorStackParamList, "Tutor Detail">>();
+
+  const video = useRef<Video | null>(null);
+  const [status, setStatus] = useState<AVPlaybackStatus & {isPlaying?: boolean} | undefined>();
+
+  const [showModal, setShowModal] = useState(false);
+  const [finalReportContent, setFinalReportContent] = useState<string>("");
 
   const { data: tutor, mutate: mutateTutor } = useSWR<TutorDetail>(
     `/tutor/${params.tutorId}`
@@ -46,6 +62,12 @@ const TutorDetailScreen = () => {
   if (!tutor) return null;
 
   // TODO:: Remove slice in feedbacks
+
+  const reportContents = [
+    LL.tutorDetail.thisTutorIsAnnoying(),
+    LL.tutorDetail.thisProfileIsPretending(),
+    LL.tutorDetail.inappropriateProfilePhoto(),
+  ]
 
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
@@ -154,17 +176,24 @@ const TutorDetailScreen = () => {
             _pressed={{
               bg: "transparent",
             }}
+            onPress={() => setShowModal(true)}
           >
             <Text color={"#1890ff"}>
               {LL.ui.report()}
             </Text>
           </Button>
         </HStack>
-        {/* <Video
+        <Video
+          ref={video}
           source={{
-            uri: "https://sandbox.api.lettutor.com/video/f64bca88-80fb-479d-a9d1-66fd326cfa45video1641245785756.mp4",
-          }} // Can be a URL or a local file.
-        /> */}
+            uri: tutor.video,
+          }}
+          style={{ width: "100%", height: 300 }}
+          useNativeControls
+          resizeMode={ResizeMode.CONTAIN}
+          isLooping
+          onPlaybackStatusUpdate={setStatus}
+        />
         <Text fontSize={18} my={2}>
           {LL.tutorDetail.education()}
         </Text>
@@ -172,15 +201,15 @@ const TutorDetailScreen = () => {
         <Text fontSize={18} my={2}>
           {LL.tutorDetail.languages()}
         </Text>
-        <HStack ml={4}>
+        <Flex ml={4} wrap="wrap"  flexDirection={"row"}>
           {tutor.languages.split(",").map((language, index) => (
             <Tag content={ISO6391.getName(language)} key={index} checked />
           ))}
-        </HStack>
+        </Flex>
         <Text fontSize={18} my={2}>
           {LL.tutorDetail.specialties()}
         </Text>
-        <HStack ml={4}>
+        <Flex ml={4} wrap="wrap" flexDirection={"row"}>
           {tutor.specialties.split(",").map((specialty, index) => (
             <Tag
               content={_.startCase(specialty.replace(/-/g, " "))}
@@ -188,7 +217,7 @@ const TutorDetailScreen = () => {
               key={index}
             />
           ))}
-        </HStack>
+        </Flex>
         <Text fontSize={18} my={2}>
           {LL.tutorDetail.interests()}
         </Text>
@@ -225,8 +254,63 @@ const TutorDetailScreen = () => {
             </HStack>
           ))}
         </VStack>
-        <BookingTable tutorId={params.tutorId} />
+        <BookingTable tutorId={params.tutorId} key={tutor.User.id} />
       </VStack>
+
+      <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
+        <Modal.Content maxWidth="400px">
+          <Modal.CloseButton />
+          <Modal.Header>{LL.ui.report()} {tutor.User.name}</Modal.Header>
+          <Modal.Body>
+            <HStack alignItems={"center"} space={2} mb={2}>
+              <FontAwesomeIcon icon={faExclamationCircle} color="rgb(0, 113, 240)" size={20}/>
+              <Text>{LL.tutorDetail.helpUsUnderStand()}</Text>
+            </HStack>
+            <VStack ml={3} space={1} mb={3}>
+                {reportContents.map(reportContent => (
+                  <Checkbox value={reportContent} key={reportContent}
+                    onChange={(value) => {
+                      if (value) {
+                        setFinalReportContent(prev => prev + (prev !== "" ? "\n" : "") + reportContent);
+                        return;
+                      }
+                      setFinalReportContent(prev => prev.replace("\n" + reportContent, ""));
+                    }}
+                  >
+                    {reportContent}
+                  </Checkbox>
+                ))}
+            </VStack>
+            <TextArea autoCompleteType={undefined} value={finalReportContent} onChangeText={setFinalReportContent}/>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button.Group space={2}>
+              <Button variant="outline" colorScheme="blueGray" onPress={() => {
+              setShowModal(false);
+            }}>
+                {LL.ui.cancel()}
+              </Button>
+              <Button onPress={async () => {
+                try {
+                  const {data: result} = await reportTutor(finalReportContent, params.tutorId);
+                  toast.show({
+                    title: result.message,
+                  });
+                } catch (error) {
+                  toast.show({
+                    title: "Error",
+                  });
+                }
+                setShowModal(false);
+              }}
+                disabled={!finalReportContent.length}
+              >
+                {LL.ui.report()}
+              </Button>
+            </Button.Group>
+          </Modal.Footer>
+        </Modal.Content>
+      </Modal>
     </ScrollView>
   );
 };

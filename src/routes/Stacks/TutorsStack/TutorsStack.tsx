@@ -1,7 +1,7 @@
 import { createStackNavigator } from "@react-navigation/stack";
 import TutorListScreen from "../../../screens/TutorListScreen";
 import TutorDetailScreen from "../../../screens/TutorDetailScreen";
-import DialScreen from "../../../screens/DialScreen";
+import ScheduleBookingScreen from "../../../screens/ScheduleBookingScreen";
 
 const Stack = createStackNavigator();
 
@@ -13,6 +13,7 @@ const TutorsStack = () => (
       options={{ headerShown: false }}
     />
     <Stack.Screen name="Tutor Detail" component={TutorDetailScreen} />
+    <Stack.Screen name="Schedule Booking" component={ScheduleBookingScreen} />
   </Stack.Navigator>
 );
 

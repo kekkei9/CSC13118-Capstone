@@ -2,18 +2,21 @@ import { faComment } from "@fortawesome/free-regular-svg-icons";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { useNavigation } from "@react-navigation/native";
-import { Text, VStack, HStack, Image, Button } from "native-base";
+import { Text, VStack, HStack, Image, Button, useToast } from "native-base";
 import { SvgUri } from "react-native-svg";
 import { HistoryItem } from "../../types/Schedule";
 import dayjs from "dayjs";
 import { countryNameMapper } from "../../constants/CountryConstant";
 import { useI18nContext } from "../../i18n/i18n-react";
+import { cancelABookedClass } from "../../services/backend/ScheduleController";
 
 type BookeditemType = {
   scheduleItem: HistoryItem;
+  mutate?: () => void
 }
 
-const BookedItem = ({scheduleItem}: BookeditemType) => {
+const BookedItem = ({scheduleItem, mutate}: BookeditemType) => {
+  const toast = useToast();
   const navigation = useNavigation();
   const {LL} = useI18nContext();
 
@@ -78,7 +81,32 @@ const BookedItem = ({scheduleItem}: BookeditemType) => {
           <Text flex={1} fontSize={20}>
             {startTime} - {endTime}
           </Text>
-          <Button>{LL.ui.cancel()}</Button>
+          { dayjs(startTimestamp).diff(dayjs(), "hour") > 2 ?
+            <Button 
+              onPress={async () => {
+                try {
+                  const result = await cancelABookedClass(scheduleItem.id, {
+                    cancelReasonId: 2,
+                    note: "111"
+                  })
+                  mutate?.()
+                  if (result?.status === 200) {
+                    toast.show({
+                      title: "Success",
+                    })
+                  }
+                } catch (error) {
+                  console.log(error)
+                  toast.show({
+                    title: "Error",
+                  })
+                }
+              }}
+            >
+              {LL.ui.cancel()}
+            </Button> :
+            null
+          }
         </HStack>
         <VStack borderWidth={1} borderColor={"#d9d9d9"}>
           <HStack

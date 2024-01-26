@@ -3,6 +3,14 @@
     "name": "Capstone",
     "slug": "Capstone",
     "version": "1.0.0",
+    "plugins": [
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "The app accesses your photos to let you share them with your friends."
+        }
+      ]
+    ],
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -17,8 +25,7 @@
     ],
     "ios": {
       "jsEngine": "jsc",
-      "supportsTablet": true,
-      "bundleIdentifier": "com.kekkei.Capstone"
+      "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {
