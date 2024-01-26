@@ -19,8 +19,8 @@ import TypesafeI18n, { I18nContext, useI18nContext } from './src/i18n/i18n-react
 import { useEffect } from 'react';
 import { loadAllLocalesAsync } from './src/i18n/i18n-util.async';
 import { loadAllLocales } from './src/i18n/i18n-util.sync';
-// LogBox.ignoreLogs(["Warning: ..."]); // Ignore log notification by message
-// LogBox.ignoreAllLogs(); //Ignore all log notifications
+LogBox.ignoreLogs(["Warning: ..."]); // Ignore log notification by message
+LogBox.ignoreAllLogs(); //Ignore all log notifications
 
 dayjs.extend(customParseFormat);
 dayjs.extend(utc)

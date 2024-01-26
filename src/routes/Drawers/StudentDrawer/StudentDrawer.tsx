@@ -24,7 +24,8 @@ const StudentDrawer = () => {
       }}
       drawerContent={(props) => <CustomDrawerContent {...props} />}
     >
-      <Drawer.Screen name="Profile" component={EditProfileScreen} />
+      {/* <Drawer.Screen name="Profile" component={EditProfileScreen} /> */}
+      <Drawer.Screen name={LL.nav.tutors() || "Tutors"} component={TutorsStack} />
       <Drawer.Screen name={LL.nav.schedule() || "Schedule"} component={ScheduleScreen} />
       <Drawer.Screen name={LL.nav.history() || "History"} component={HistoryScreen} />
       <Drawer.Screen name={LL.nav.courses() || "Courses"} component={CoursesStack} />
