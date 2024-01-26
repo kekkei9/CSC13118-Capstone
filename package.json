@@ -5,8 +5,8 @@
   "scripts": {
     "postinstall": "patch-package",
     "start": "expo start",
-    "android": "expo start --android",
-    "ios": "expo start --ios",
+    "android": "expo run:android",
+    "ios": "expo run:ios",
     "web": "expo start --web",
     "typesafe-i18n": "typesafe-i18n"
   },
@@ -63,7 +63,8 @@
     "redux": "^4.2.1",
     "rn-pdf-reader-js": "^4.1.1",
     "swr": "^2.2.4",
-    "typesafe-i18n": "^5.26.2"
+    "typesafe-i18n": "^5.26.2",
+    "expo-splash-screen": "~0.20.5"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
