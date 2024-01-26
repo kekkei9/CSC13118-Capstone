@@ -22,6 +22,7 @@ import {
   Text,
   TextArea,
   VStack,
+  View,
   useToast,
 } from "native-base";
 import useSWR from "swr";
@@ -35,8 +36,8 @@ import { TutorStackParamList } from "../../types/Route/Stack";
 import { Feedback, TutorDetail } from "../../types/Tutor";
 import { timeDiff } from "../../utils/date";
 import { useI18nContext } from "../../i18n/i18n-react";
-import { useState } from "react";
-import { set } from "react-hook-form";
+import { useRef, useState } from "react";
+import { Video, ResizeMode, AVPlaybackStatus } from 'expo-av';
 
 //to fetch all tutors
 const PAGE_SIZE = 100;
@@ -45,6 +46,9 @@ const TutorDetailScreen = () => {
   const toast = useToast();
   const {LL} = useI18nContext();
   const { params } = useRoute<RouteProp<TutorStackParamList, "Tutor Detail">>();
+
+  const video = useRef<Video | null>(null);
+  const [status, setStatus] = useState<AVPlaybackStatus & {isPlaying?: boolean} | undefined>();
 
   const [showModal, setShowModal] = useState(false);
   const [finalReportContent, setFinalReportContent] = useState<string>("");
@@ -179,11 +183,17 @@ const TutorDetailScreen = () => {
             </Text>
           </Button>
         </HStack>
-        {/* <Video
+        <Video
+          ref={video}
           source={{
-            uri: "https://sandbox.api.lettutor.com/video/f64bca88-80fb-479d-a9d1-66fd326cfa45video1641245785756.mp4",
-          }} // Can be a URL or a local file.
-        /> */}
+            uri: tutor.video,
+          }}
+          style={{ width: "100%", height: 300 }}
+          useNativeControls
+          resizeMode={ResizeMode.CONTAIN}
+          isLooping
+          onPlaybackStatusUpdate={setStatus}
+        />
         <Text fontSize={18} my={2}>
           {LL.tutorDetail.education()}
         </Text>
@@ -244,7 +254,7 @@ const TutorDetailScreen = () => {
             </HStack>
           ))}
         </VStack>
-        <BookingTable tutorId={params.tutorId} />
+        <BookingTable tutorId={params.tutorId} key={tutor.User.id} />
       </VStack>
 
       <Modal isOpen={showModal} onClose={() => setShowModal(false)}>

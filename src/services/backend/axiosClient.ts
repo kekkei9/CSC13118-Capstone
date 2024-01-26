@@ -1,7 +1,7 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios";
 import { ACCESS_TOKEN, REFRESH_TOKEN } from "../../constants/AuthConstant";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { AuthResponse, Response } from "../../types/Response/AuthResponse";
+import { AuthResponse } from "../../types/Response/AuthResponse";
 
 export interface RequestOptions {
   redirectOn401?: boolean;
