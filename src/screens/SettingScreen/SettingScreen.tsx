@@ -9,8 +9,8 @@ const SettingScreen = () => {
 
     const {LL} = useI18nContext();
 
-    return ( <VStack>
-        <Text>{"hihi"}</Text>
+    return ( <VStack p={3} space={3}>
+        <Text>Use dark mode</Text>
         <Switch isChecked={colorMode === "dark"} onToggle={_ => {toggleColorMode()}}/>
     </VStack> );
 }

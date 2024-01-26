@@ -29,7 +29,7 @@ const StudentDrawer = () => {
       <Drawer.Screen name={LL.nav.schedule() || "Schedule"} component={ScheduleScreen} />
       <Drawer.Screen name={LL.nav.history() || "History"} component={HistoryScreen} />
       <Drawer.Screen name={LL.nav.courses() || "Courses"} component={CoursesStack} />
-      {/* <Drawer.Screen name="Dial" component={DialScreen} options={{drawerItemStyle: {display:'none'}}} /> */}
+      <Drawer.Screen name="Dial" component={DialScreen} options={{drawerItemStyle: {display:'none'}}} />
       <Drawer.Screen name={LL.nav.settings() || "Settings"} component={SettingScreen} />
     </Drawer.Navigator>
   );
