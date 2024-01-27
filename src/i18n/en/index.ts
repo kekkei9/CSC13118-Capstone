@@ -94,11 +94,13 @@ const en = {
 		lessons: "lessons",
 	},
 	nav: {
+		profile: "Profile",
 		tutors: "Tutors",
 		schedule: "Schedule",
 		history: "History",
 		courses: "Courses",
 		settings: "Settings",
+		logOut: "Log out",
 	
 		tutorList: "Tutor List",
 		tutorDetail: "Tutor Detail",

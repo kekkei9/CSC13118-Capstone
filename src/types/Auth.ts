@@ -8,7 +8,7 @@ type WalletInfo = {
   bonus: number;
 };
 
-type LearnTopic = {
+export type LearnTopic = {
   id: number;
   key: string;
   name: string;

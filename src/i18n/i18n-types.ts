@@ -330,6 +330,10 @@ type RootTranslation = {
 	}
 	nav: {
 		/**
+		 * P​r​o​f​i​l​e
+		 */
+		profile: string
+		/**
 		 * T​u​t​o​r​s
 		 */
 		tutors: string
@@ -349,6 +353,10 @@ type RootTranslation = {
 		 * S​e​t​t​i​n​g​s
 		 */
 		settings: string
+		/**
+		 * L​o​g​ ​o​u​t
+		 */
+		logOut: string
 		/**
 		 * T​u​t​o​r​ ​L​i​s​t
 		 */
@@ -687,6 +695,10 @@ export type TranslationFunctions = {
 	}
 	nav: {
 		/**
+		 * Profile
+		 */
+		profile: () => LocalizedString
+		/**
 		 * Tutors
 		 */
 		tutors: () => LocalizedString
@@ -706,6 +718,10 @@ export type TranslationFunctions = {
 		 * Settings
 		 */
 		settings: () => LocalizedString
+		/**
+		 * Log out
+		 */
+		logOut: () => LocalizedString
 		/**
 		 * Tutor List
 		 */

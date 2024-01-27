@@ -1,3 +1,4 @@
+import { axiosConfigs } from './../axiosClient';
 import { User } from "../../../types/Auth";
 import { axiosClient } from "../axiosClient";
 
@@ -9,12 +10,12 @@ export const getUserInformation = () => axiosClient.get("/user/me");
 export const updateUserInformation = (user: User) =>
   axiosClient.put("/user/info", user);
 
-export const updateUserAvatar = (avatar: Blob) => {
-  const formData = new FormData();
-  formData.append("avatar", avatar);
-  console.log(formData);
-
-  return axiosClient.post("/user/uploadAvatar", formData);
+export const updateUserAvatar = (formData: FormData) => {
+  return axiosClient.post("/user/uploadAvatar", formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
 }
 
 export const registerToBecomeTeacher = (teacherForm: FormData) =>

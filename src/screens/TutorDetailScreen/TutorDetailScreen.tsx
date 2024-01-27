@@ -5,7 +5,7 @@ import {
   faHeart as faHeartSolid,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
-import { RouteProp, useRoute } from "@react-navigation/native";
+import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import ISO6391 from "iso-639-1";
 import _ from "lodash";
 import {
@@ -36,7 +36,7 @@ import { TutorStackParamList } from "../../types/Route/Stack";
 import { Feedback, TutorDetail } from "../../types/Tutor";
 import { timeDiff } from "../../utils/date";
 import { useI18nContext } from "../../i18n/i18n-react";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Video, ResizeMode, AVPlaybackStatus } from 'expo-av';
 
 //to fetch all tutors
@@ -46,6 +46,7 @@ const TutorDetailScreen = () => {
   const toast = useToast();
   const {LL} = useI18nContext();
   const { params } = useRoute<RouteProp<TutorStackParamList, "Tutor Detail">>();
+  const navigation = useNavigation();
 
   const video = useRef<Video | null>(null);
   const [status, setStatus] = useState<AVPlaybackStatus & {isPlaying?: boolean} | undefined>();
@@ -56,6 +57,23 @@ const TutorDetailScreen = () => {
   const { data: tutor, mutate: mutateTutor } = useSWR<TutorDetail>(
     `/tutor/${params.tutorId}`
   );
+
+  useEffect(() => {
+    const onFocus = navigation.addListener('focus', () => {
+      console.log('focus');
+      setStatus(prev => ({...prev, isPlaying: true}));
+    });
+  
+    const onBlur = navigation.addListener('blur', () => {
+      console.log('blur');
+      setStatus(prev => ({...prev, isPlaying: false}));
+    });
+  
+    return () => {
+      onFocus();
+      onBlur();
+    };
+  }, []);
 
   const { data: tutorFeedbacks } = useSWR<BaseResponseList<Feedback>>(`/feedback/v2/${params.tutorId}?perPage=${PAGE_SIZE}&page=1`);
 
@@ -133,7 +151,7 @@ const TutorDetailScreen = () => {
         <Text opacity={0.6} mt={2}>
           {tutor?.bio}
         </Text>
-        <HStack space={5} mt={4}>
+        <HStack space={5} my={4}>
           <Button
             flex={1}
             leftIcon={
@@ -183,7 +201,9 @@ const TutorDetailScreen = () => {
             </Text>
           </Button>
         </HStack>
-        <Video
+        {
+          tutor.video ?
+          <Video
           ref={video}
           source={{
             uri: tutor.video,
@@ -194,6 +214,8 @@ const TutorDetailScreen = () => {
           isLooping
           onPlaybackStatusUpdate={setStatus}
         />
+        : null
+        }
         <Text fontSize={18} my={2}>
           {LL.tutorDetail.education()}
         </Text>

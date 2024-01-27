@@ -9,7 +9,7 @@ import { StudentDrawerParamList } from "./Drawer";
 export type TutorStackParamList = {
   "Tutor List": undefined;
   "Tutor Detail": { tutorId: string, shouldRefresh?: boolean};
-  "Schedule Booking": { scheduleDetailId: string, startTimestamp: number, endTimestamp: number };
+  "Schedule Booking": { scheduleDetailId: string, startTimestamp: number, startTime: string, endTime: string };
 };
 
 export type TutorsStackNavigationProp = CompositeNavigationProp<

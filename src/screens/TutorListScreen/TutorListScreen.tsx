@@ -27,7 +27,7 @@ import {
   initTutorFilter,
   searchTutor,
 } from "../../services/backend/TutorController";
-import { BaseResponseList } from "../../types/Response/BaseResponse";
+import { BaseResponse, BaseResponseList } from "../../types/Response/BaseResponse";
 import { TutorsStackNavigationProp } from "../../types/Route/Stack";
 import { HistoryItem as HistoryItemType } from "../../types/Schedule";
 import { Tutor } from "../../types/Tutor";
@@ -89,8 +89,9 @@ const TutorListScreen = () => {
 
   //get latest schedule
 
-  const {data: scheduleResponse} = useSWR<BaseResponseList<HistoryItemType>>("/booking/list/student?page=1&perPage10&inFuture=1&orderBy=meeting&sortBy=asc")
-  const latestSchedule = scheduleResponse?.data.rows[0];
+  const {data: scheduleResponse} = useSWR<BaseResponseList<HistoryItemType>>("/booking/list/student?page=1&perPage=10&inFuture=1&orderBy=meeting&sortBy=asc")
+  const {data: totalResponse} = useSWR<{total: Number}>("/call/total")
+  const latestSchedule = scheduleResponse?.data.rows[1]
 
   const handleFavorite = async (tutorId: string) => {
     const result = await addTutorToFavorite(tutorId);
@@ -101,9 +102,8 @@ const TutorListScreen = () => {
     });
   };
 
-  const lessonTime = dayjs(latestSchedule?.scheduleDetailInfo.endPeriodTimestamp).diff(dayjs(latestSchedule?.scheduleDetailInfo.startPeriodTimestamp), "minutes")
-  const hours = Math.floor(lessonTime / 60);
-  const minutes = lessonTime % 60;
+  const hours = Math.floor((totalResponse?.total || 0) / 60);
+  const minutes = (totalResponse?.total || 0) % 60;
 
   const timerRef= useRef<any>(null);
   const [upcomingTimeInSeconds, setUpcomingTimeInSeconds] = useState<number>(0);
@@ -114,9 +114,9 @@ const TutorListScreen = () => {
     return () => clearInterval(timerRef.current);
   })
 
-  const upcomingTimeInMinutes = Math.floor(upcomingTimeInSeconds / 60);
-  const upcomingTimeInHours = Math.floor(upcomingTimeInMinutes / 60);
-  const displayUpcomingTime = `${upcomingTimeInHours}:${upcomingTimeInMinutes % 60}:${upcomingTimeInSeconds % 60}`;
+  const upcomingTimeInMinutes =upcomingTimeInSeconds>0? Math.floor(upcomingTimeInSeconds / 60): Math.floor(Math.abs(upcomingTimeInSeconds) / 60);
+  const upcomingTimeInHours = upcomingTimeInMinutes >0 ? Math.floor(upcomingTimeInMinutes / 60): Math.floor(Math.abs(upcomingTimeInMinutes) / 60);
+  const displayUpcomingTime = `${upcomingTimeInHours}:${upcomingTimeInMinutes % 60}:${Math.abs(upcomingTimeInSeconds) % 60}`;
 
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
@@ -133,11 +133,23 @@ const TutorListScreen = () => {
           </Text>
           <HStack w="full" mt={3} alignItems={"center"}>
             <Container p={2} flex={2} >
-              <Text fontSize={20} color={"white"} textAlign={"center"}>
-                {dayjs(latestSchedule?.scheduleDetailInfo.startPeriodTimestamp).format("ddd, DD MMM YY")}{" "}
-                {dayjs(latestSchedule?.scheduleDetailInfo.startPeriodTimestamp).format("HH:mm")} - {dayjs(latestSchedule?.scheduleDetailInfo.endPeriodTimestamp).format("HH:mm")}
+              {
+                latestSchedule ?
+                <Text fontSize={20} color={"white"} textAlign={"center"}>
+                {dayjs(latestSchedule?.scheduleDetailInfo.scheduleInfo.startTimestamp).format("ddd, DD MMM YY")}{" "}
+                {dayjs(latestSchedule?.scheduleDetailInfo.scheduleInfo.startTimestamp).format("HH:mm")} - {dayjs(latestSchedule?.scheduleDetailInfo.scheduleInfo.endTimestamp).format("HH:mm")}
               </Text>
-              <Text color={"#ffff00"} textAlign={"center"}>({LL.tutorList.startsIn()} {displayUpcomingTime})</Text>
+              : null
+              }
+             {
+              upcomingTimeInSeconds > 0 ?
+              <Text color={"#ffff00"} textAlign={"center"}>
+              ({LL.tutorList.startsIn()} {displayUpcomingTime})
+              </Text>:
+              <Text color={"#90ee90"} textAlign={"center"}>
+              ({LL.tutorList.startsIn()} {displayUpcomingTime})
+              </Text>
+             }
             </Container>
             <Button
               fontSize={16}
@@ -270,13 +282,7 @@ const TutorListScreen = () => {
               key={tutor.id}
             />
            ))}
-          <Pagination 
-            maxBulletNumber={5} 
-            total={(tutorsResponse?.count || 0) / PAGE_SIZE} 
-            value={currentPage} 
-            onChange={setCurrentPage}
-          />
-          {tutorsResponse?.rows.length === 0 && 
+          {tutorsResponse?.rows.length === 0 ? 
               <Center>
                 <Image
                   width="184"
@@ -288,7 +294,13 @@ const TutorListScreen = () => {
                   style={{ objectFit: "contain" }}
                 />
                 <Text>{LL.tutorList.sorryWeCantFindAnyTutors()}</Text>
-            </Center>}
+            </Center>:
+            <Pagination 
+            maxBulletNumber={5} 
+            total={(tutorsResponse?.count || 0) / PAGE_SIZE} 
+            value={currentPage} 
+            onChange={setCurrentPage}
+          />}
         </VStack>
       </VStack>
     </ScrollView>

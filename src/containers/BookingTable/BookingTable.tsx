@@ -12,7 +12,6 @@ import { TutorsStackNavigationProp } from "../../types/Route/Stack";
 
 type BookingTableProps = {
     tutorId: string;
-    tableKey: number;
 }
 
 const BookingTable = ({tutorId}: BookingTableProps) => {
@@ -35,6 +34,7 @@ const BookingTable = ({tutorId}: BookingTableProps) => {
     useFocusEffect(() => {
         fetchSchedule();
     })
+
 
     useEffect(() => {
     if (!tutorSchedule.length) return;
@@ -62,9 +62,9 @@ const BookingTable = ({tutorId}: BookingTableProps) => {
     }
 
     const handleBook = (schedule: TutorSchedule) => {
-        const {startTimestamp, endTimestamp, scheduleDetails} = schedule;
+        const {startTimestamp, startTime, endTime, scheduleDetails} = schedule;
 
-        navigation.navigate("Schedule Booking", {scheduleDetailId: scheduleDetails[0].id, startTimestamp, endTimestamp});
+        navigation.navigate("Schedule Booking", {scheduleDetailId: scheduleDetails[0].id, startTimestamp, startTime, endTime});
     }
 
     return ( <VStack>

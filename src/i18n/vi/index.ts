@@ -70,7 +70,7 @@ const vi = {
 		directMessage: "Nhắn tin",
 	},
 	courses: {
-		discoverCourses: "Discover Courses",
+		discoverCourses: "Khám phá các khóa học",
 		liveTutorHasBuilt: "LiveTutor đã xây dựng nên các khóa học của các lĩnh vực trong cuộc sống chất lượng, bài bản và khoa học nhất cho những người đang có nhu cầu trau dồi thêm kiến thức về các lĩnh vực.",
 		course: "Khoá học",
 		discover: "Khám phá",
@@ -94,11 +94,13 @@ const vi = {
 		addARating: "Đánh giá",
 	},
 	nav: {
+		profile: "Quản lý tài khoản",
 		tutors: "Gia sư",
 		schedule: "Lịch Học",
 		history: "Lịch sử",
 		courses: "Khóa học",
 		settings: "Cài đặt",
+		logOut: "Đăng xuất",
 
 		tutorList: "Danh sách gia sư",
 		tutorDetail: "Thông tin gia sư",

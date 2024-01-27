@@ -48,6 +48,8 @@ const LoginScreen = () => {
   useEffect(() => {
     // Auto fill form for development
     if (__DEV__) {
+      // setValue("email", "quytn.dev@gmail.com");
+      // setValue("password", "kekkei1610");
       setValue("email", "phhai@ymail.com");
       setValue("password", "123456");
     }

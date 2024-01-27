@@ -7,6 +7,7 @@ import { TutorStackParamList, TutorsStackNavigationProp } from "../../types/Rout
 import { bookAClass } from "../../services/backend/ScheduleController";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faCheckCircle } from "@fortawesome/free-solid-svg-icons";
+import dayjs from "dayjs";
 
 const ScheduleBookingScreen = () => {
     const {LL} = useI18nContext();
@@ -59,14 +60,14 @@ const ScheduleBookingScreen = () => {
         </Center>
         : 
         <>
-            <Text>Booking details</Text>
+            <Text fontWeight={"bold"} fontSize={20} pt={6}>Booking details</Text>
             <VStack>
-                <Text>Booking Time</Text>
+                <Text fontWeight={"semibold"} fontSize={18}>Booking Time</Text>
                 <View>
-                    <Text>11:00 - 11:25 Tuesday, 30 January 2024</Text>
+                    <Text italic>{params.startTime} - {params.endTime} {dayjs(params.startTimestamp).format("dddd, DD, MMM YYYY")}</Text>
                 </View>
             </VStack>
-            <VStack>
+            <VStack bg={"gray.300"} p={3} borderRadius={2}>
                 <HStack justifyContent={"space-between"}>
                     <Text>Balance</Text>
                     <Text>You have {(Number(user?.walletInfo.amount) || 0) / 100000} lessons left</Text>

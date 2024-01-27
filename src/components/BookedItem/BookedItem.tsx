@@ -2,26 +2,66 @@ import { faComment } from "@fortawesome/free-regular-svg-icons";
 import { faChevronDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { useNavigation } from "@react-navigation/native";
-import { Text, VStack, HStack, Image, Button, useToast } from "native-base";
+import { Text, VStack, HStack, Image, Button, useToast, Input, TextArea, Modal } from "native-base";
 import { SvgUri } from "react-native-svg";
 import { HistoryItem } from "../../types/Schedule";
 import dayjs from "dayjs";
 import { countryNameMapper } from "../../constants/CountryConstant";
 import { useI18nContext } from "../../i18n/i18n-react";
-import { cancelABookedClass } from "../../services/backend/ScheduleController";
+import { cancelABookedClass, updateStudentRequest } from "../../services/backend/ScheduleController";
+import { useState } from "react";
 
 type BookeditemType = {
-  scheduleItem: HistoryItem;
+  scheduleItems: HistoryItem[];
   mutate?: () => void
 }
 
-const BookedItem = ({scheduleItem, mutate}: BookeditemType) => {
+const BookedItem = ({scheduleItems, mutate}: BookeditemType) => {
   const toast = useToast();
   const navigation = useNavigation();
   const {LL} = useI18nContext();
 
-  const {scheduleInfo} = scheduleItem.scheduleDetailInfo;
-  const {tutorInfo, startTimestamp, startTime, endTime} = scheduleInfo
+  const [showCancelModal, setShowCancelModal] = useState<boolean>(false);
+  const [editingStudentRequest, setEditingStudentRequest] = useState<boolean>(false);
+  const [studentRequest, setStudentRequest] = useState<string>("" as never);
+
+  const {scheduleInfo} = scheduleItems[0].scheduleDetailInfo;
+  const {tutorInfo, startTimestamp, endTimestamp} = scheduleInfo
+
+  const handleSaveRequest = (scheduleItem: HistoryItem) => {
+    updateStudentRequest(scheduleItem.id, studentRequest).then(result => {
+      if (result?.status === 200) {
+        toast.show({
+          title: "Success",
+        })
+      }
+    }).catch(error => {
+      console.log(error)
+      toast.show({
+        title: "Error",
+      })
+    })
+    setEditingStudentRequest(false)}
+
+    const handleCancel = async (scheduleItem: HistoryItem) => {
+      try {
+        const result = await cancelABookedClass(scheduleItem.id, {
+          cancelReasonId: 2,
+          note: "111"
+        })
+        mutate?.()
+        if (result?.status === 200) {
+          toast.show({
+            title: "Success",
+          })
+        }
+      } catch (error) {
+        console.log(error)
+        toast.show({
+          title: "Error",
+        })
+      }
+    }
 
   return (
     <VStack
@@ -35,7 +75,7 @@ const BookedItem = ({scheduleItem, mutate}: BookeditemType) => {
       <Text fontSize={24} fontWeight={700}>
         {dayjs(startTimestamp).format("ddd, DD MMM YY")}
       </Text>
-      <Text>1 {LL.ui.lesson()}</Text>
+      <Text>{scheduleItems.length} {LL.ui.lessons()}</Text>
       <HStack 
         _light={{backgroundColor: "white"}}
         _dark={{backgroundColor: "gray.700"}}
@@ -72,36 +112,20 @@ const BookedItem = ({scheduleItem, mutate}: BookeditemType) => {
           </HStack>
         </VStack>
       </HStack>
-      <VStack
+      {scheduleItems.map((scheduleItem) => (
+        <>
+        <VStack
         _light={{backgroundColor: "white"}}
         _dark={{backgroundColor: "gray.700"}} 
         mt={6} px={5} pt={3} pb={1.5}
       >
         <HStack alignItems={"center"} mb={4}>
           <Text flex={1} fontSize={20}>
-            {startTime} - {endTime}
+            {dayjs(startTimestamp).format("HH:mm")} - {dayjs(endTimestamp).format("HH:mm")}
           </Text>
           { dayjs(startTimestamp).diff(dayjs(), "hour") > 2 ?
             <Button 
-              onPress={async () => {
-                try {
-                  const result = await cancelABookedClass(scheduleItem.id, {
-                    cancelReasonId: 2,
-                    note: "111"
-                  })
-                  mutate?.()
-                  if (result?.status === 200) {
-                    toast.show({
-                      title: "Success",
-                    })
-                  }
-                } catch (error) {
-                  console.log(error)
-                  toast.show({
-                    title: "Error",
-                  })
-                }
-              }}
+              onPress={() => setShowCancelModal(true)}
             >
               {LL.ui.cancel()}
             </Button> :
@@ -121,14 +145,32 @@ const BookedItem = ({scheduleItem, mutate}: BookeditemType) => {
               <FontAwesomeIcon icon={faChevronDown} size={12} />
               <Text>{LL.schedule.requestForLesson()}</Text>
             </HStack>
-            <Text color="rgb(0, 113, 240)" flex={1} textAlign={"right"}>{LL.schedule.editRequest()}</Text>
+            <Text color="rgb(0, 113, 240)" flex={1} textAlign={"right"} onPress={() => setEditingStudentRequest(true)}>{LL.schedule.editRequest()}</Text>
           </HStack>
-          <Text p={4} color={!!scheduleItem.studentRequest ? "inherit" : "#8399a7"}>
-            {LL.schedule.currentlyThereIsNoRequest()}
-          </Text>
+          <TextArea p={4} color={!!scheduleItem.studentRequest ? "inherit" : "#8399a7"} autoCompleteType={undefined} 
+            placeholder={LL.schedule.currentlyThereIsNoRequest()} value={studentRequest} isReadOnly={!editingStudentRequest}
+            rightElement={<>{ editingStudentRequest ? <Button onPress={() => handleSaveRequest(scheduleItem)}>Save</Button> : null}</>}
+            onChangeText={setStudentRequest}
+          />
         </VStack>
       </VStack>
-      <Button mt={4} onPress={() => navigation.navigate("Dial" as never)}>
+      <Modal isOpen={showCancelModal} onClose={() => setShowCancelModal(false)}>
+        <Modal.Content maxWidth="400px">
+          <Modal.CloseButton />
+          <Modal.Header>{LL.ui.cancel()}</Modal.Header>
+          <Modal.Body>
+          <Text>Are you sure you want to cancel this booked class?</Text>
+          <HStack space={3} alignSelf={"flex-end"}>
+            <Button onPress={() => handleCancel(scheduleItem)}>Confirm</Button>
+            <Button variant="outline" onPress={() => setShowCancelModal(false)}>
+              Cancel
+            </Button>
+          </HStack>
+        </Modal.Body>
+        </Modal.Content>
+        </Modal></>
+      ))}
+            <Button mt={4} onPress={() => navigation.navigate("Dial" as never)}>
         {LL.schedule.goToMeeting()}
       </Button>
     </VStack>

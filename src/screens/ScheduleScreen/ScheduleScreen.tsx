@@ -7,6 +7,8 @@ import { HistoryItem as HistoryItemType } from "../../types/Schedule";
 import { useI18nContext } from "../../i18n/i18n-react";
 import Pagination from "../../components/Pagination";
 import { useState } from "react";
+import _ from "lodash";
+import { validTimestamp } from "../../constants/ScheduleConstant";
 
 const PAGE_SIZE = 20;
 
@@ -14,7 +16,30 @@ const ScheduleScreen = () => {
   const {LL} = useI18nContext();
   const [currentPage, setCurrentPage] = useState<number>(1);
 
-  const {data: scheduleResponse, mutate} = useSWR<BaseResponseList<HistoryItemType>>(`/booking/list/student?page=${currentPage}&perPage${PAGE_SIZE}0&inFuture=1&orderBy=meeting&sortBy=desc`)
+  const findIndexTimeStamp = (history: HistoryItemType) => {
+    return validTimestamp.findIndex((time) => time.start === history.scheduleDetailInfo.scheduleInfo.startTime && time.end === history.scheduleDetailInfo.scheduleInfo.endTime);
+}
+
+  const {data: scheduleResponse, mutate} = useSWR<BaseResponseList<HistoryItemType>>(`/booking/list/student?page=${currentPage}&perPage=${PAGE_SIZE}&inFuture=1&orderBy=meeting&sortBy=asc`)
+  let toBeDisplayed = [];
+  let tempArr: (HistoryItemType)[] = [];
+  let prev: HistoryItemType | undefined = undefined;
+  for (const schedule of scheduleResponse?.data.rows||[]) {
+    if (schedule.scheduleDetailInfo.scheduleInfo.tutorId === prev?.scheduleDetailInfo.scheduleInfo.tutorId &&
+      findIndexTimeStamp(schedule) === findIndexTimeStamp(prev) + 1
+      ) {
+        tempArr.push(schedule);
+    } else {
+      if (tempArr.length > 0) {
+        toBeDisplayed.push(tempArr);
+      }
+      tempArr = [schedule];
+    }
+    prev = schedule
+  }
+  if (tempArr.length > 0) {
+    toBeDisplayed.push(tempArr);
+  }
 
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
@@ -45,8 +70,8 @@ const ScheduleScreen = () => {
           <Text fontWeight={700}>{LL.schedule.latestBook()}</Text>
         </VStack>
         <VStack px={7} space={6}>
-          {scheduleResponse?.data.rows.map((scheduleItem) => (
-            <BookedItem scheduleItem={scheduleItem} key={scheduleItem.id} mutate={mutate} />
+          {toBeDisplayed.map((scheduleItems) =>  (
+            <BookedItem scheduleItems={scheduleItems} key={scheduleItems[0].id} mutate={mutate} />
           ))}
           <Pagination 
               maxBulletNumber={5} 

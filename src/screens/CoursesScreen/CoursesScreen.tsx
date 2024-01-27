@@ -21,6 +21,7 @@ import { CoursesStackNavigationProp } from "../../types/Route/Stack";
 import _ from "lodash";
 import CourseItem from "../../components/CourseItem";
 import * as WebBrowser from 'expo-web-browser';
+import Pagination from "../../components/Pagination";
 
 function VirtualizedView({
   children,
@@ -60,7 +61,8 @@ const renderScene = SceneMap({
 const CoursesScreen = () => {
   const {LL} = useI18nContext();
   const layout = useWindowDimensions();
-
+  
+  const [currentPage, setCurrentPage] = useState<number>(1);
   const [search, setSearch] = useState<string>("");
   const [index, setIndex] = useState<number>(0);
   const [routes] = useState<{ key: string; title: string }[]>([
@@ -120,9 +122,10 @@ const CoursesScreen = () => {
   };
 
   const currentRoute = routes[index].key;
+  const PAGE_SIZE = currentRoute === "course" ? 100 : 10;
 
   const { data: coursesList } = useSWR<BaseResponseList<Course>>(
-    `/${currentRoute}?page=1&size=${currentRoute === "course" ? 100 : 10}&q=${search}`
+    `/${currentRoute}?page=${currentPage}&size=${PAGE_SIZE}&q=${search}`
   );
 
   return (
@@ -166,7 +169,7 @@ const CoursesScreen = () => {
           onIndexChange={setIndex}
           initialLayout={{ width: layout.width }}
         />
-        <VStack pt={8} space={16}>
+        <VStack py={8} space={16}>
           {_.entries(_.groupBy(coursesList?.data.rows, "categories[0].title")).map(([category, courses])  => (
             <VStack justifyContent={"center"} key={category} space={8}>
               <Text fontSize={28} fontWeight={500}>
@@ -188,6 +191,12 @@ const CoursesScreen = () => {
             </VStack>
           ))}
         </VStack>
+        <Pagination 
+            maxBulletNumber={5} 
+            total={(coursesList?.data?.count || 0) / PAGE_SIZE} 
+            value={currentPage} 
+            onChange={setCurrentPage}
+          />
       </VStack>
     </VirtualizedView>
   );
